@@ -130,7 +130,7 @@ app.use('*', (req: Request, res: Response) =>
 app.use(errorHandler)
 app.use(unknownPath)
 
-const PORT = process.env.PORT || 8080
+const PORT = process.env.PORT || 8081
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
@@ -142,6 +142,6 @@ setInterval(() => {
   } catch (err) {
     console.error('Error cloaning up database: ', err)
   }
-}, 864001000)
+}, 24 * 3600 * 1000)
 
 socket.connect(server, sessionInstance)

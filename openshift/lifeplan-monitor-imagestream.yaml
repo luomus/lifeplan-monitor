@@ -12,7 +12,7 @@ spec:
     - annotations: null
       from:
         kind: DockerImage
-        name: lifeplan-monitor
+        name: luomus/lifeplan-monitor:testing
       generation: null
       importPolicy: {}
       name: ""

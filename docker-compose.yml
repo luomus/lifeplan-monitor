@@ -4,7 +4,7 @@ services:
     network_mode: host
     build: .
     ports:
-      - 8080:8080
+      - 8081:8081
     environment:
       - MONITOR_DB_NAME=${MONITOR_DB_NAME}
       - MONITOR_SESSION_DB_NAME=${MONITOR_SESSION_DB_NAME}

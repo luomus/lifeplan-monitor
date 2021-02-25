@@ -23,53 +23,71 @@ spec:
                 valueFrom:
                   secretKeyRef:
                     key: LIFEPLAN_API_TOKEN
-                    name: env
+                    name: monitor
             - name: LIFEPLAN_API_URL
-              value: https://lifeplan-staging.luomus.fi/api/v1/activities
+                valueFrom:
+                  secretKeyRef:
+                    key: LIFEPLAN_API_URL
+                    name: monitor
             - name: MONITOR_COMPLETED_MAX_AGE
-              value: 7
+                valueFrom:
+                  secretKeyRef:
+                    key: MONITOR_COMPLETED_MAX_AGE
+                    name: monitor
             - name: MONITOR_DB_HOST
                 valueFrom:
                   secretKeyRef:
                     key: MONITOR_DB_HOST
-                    name: env
+                    name: monitor
             - name: MONITOR_DB_NAME
                 valueFrom:
                   secretKeyRef:
                     key: MONITOR_DB_NAME
-                    name: env
+                    name: monitor
             - name: MONITOR_DB_PASSWORD
                 valueFrom:
                   secretKeyRef:
                     key: MONITOR_DB_PASSWORD
-                    name: env
+                    name: monitor
             - name: MONITOR_DB_USER
                 valueFrom:
                   secretKeyRef:
                     key: MONITOR_DB_USER
-                    name: env
+                    name: monitor
             - name: MONITOR_FAILED_MAX_AGE
-              value: 14
+                valueFrom:
+                  secretKeyRef:
+                    key: MONITOR_FAILED_MAX_AGE
+                    name: monitor
             - name: MONITOR_INPROGRESS_MAX_AGE
-              value: 14
+                valueFrom:
+                  secretKeyRef:
+                    key: MONITOR_INPROGRESS_MAX_AGE
+                    name: monitor
             - name: MONITOR_PARTIAL_MAX_AGE
-              value: 14
+                valueFrom:
+                  secretKeyRef:
+                    key: MONITOR_PARTIAL_MAX_AGE
+                    name: monitor
             - name: MONITOR_SECRET
                 valueFrom:
                   secretKeyRef:
                     key: MONITOR_SECRET
-                    name: env
+                    name: monitor
             - name: MONITOR_SECURE
-              value: 'true'
+                valueFrom:
+                  secretKeyRef:
+                    key: MONITOR_SECURE
+                    name: monitor
             - name: MONITOR_SESSION_DB_NAME
                 valueFrom:
                   secretKeyRef:
                     key: MONITOR_SESSION_DB_NAME
-                    name: env
+                    name: monitor
           image: luomus/lifeplan-monitor
           name: lifeplan-monitor
           ports:
-            - containerPort: 8080
+            - containerPort: 808
           resources: {}
       restartPolicy: Always
   test: false
@@ -81,7 +99,7 @@ spec:
           - lifeplan-monitor
         from:
           kind: ImageStreamTag
-          name: luomus/lifeplan-monitor:latest
+          name: luomus/lifeplan-monitor:testing
       type: ImageChange
 status:
   availableReplicas: 0

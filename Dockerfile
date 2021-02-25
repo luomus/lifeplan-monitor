@@ -19,7 +19,7 @@ RUN npm run tsc
 RUN npm run build:ui
 RUN rm -rf ../frontend
 
-EXPOSE 3001
+EXPOSE 8081
 
 CMD ["npm", "run", "start"]
 

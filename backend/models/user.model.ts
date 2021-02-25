@@ -13,6 +13,10 @@ const UserModel = (sequelize: Sequelize, DataTypes: any): ModelCtor<Model<any, a
     password: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    role: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   })
 

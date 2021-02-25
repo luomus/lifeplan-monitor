@@ -17,7 +17,7 @@ const  isAuthenticated = (type: string) => (req: Request, res: Response, next: N
   next({
     status: 401,
     name: 'UnauthorizedError',
-    message: 'Failed on endpoint authentication'
+    message: 'Unauthorized'
   })
 }
 
