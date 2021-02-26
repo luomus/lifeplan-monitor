@@ -145,7 +145,7 @@ export const updateInstanceById = async (req: Request, res: Response): Promise<v
 
     const toReturn = updatedInstance.toJSON()
 
-    if (!noActivities) {
+    if (noActivities) {
       timedInstanceDelete(req.params.id)
       return toReturn
     }
