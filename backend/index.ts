@@ -106,6 +106,7 @@ const sessionStore = new MySQLStore({
   password: process.env.MONITOR_DB_PASSWORD,
   database: process.env.MONITOR_SESSION_DB_NAME
 })
+
 const sessionInstance = session({
   // @ts-ignore
   secret: process.env.MONITOR_SECRET,
@@ -113,12 +114,12 @@ const sessionInstance = session({
   unset: 'destroy',
   cookie: {
     secure: (process.env.MONITOR_SECURE === 'true'),
-    maxAge: 24 * 3600 * 1000,
-    sameSite: true
+    maxAge: 24 * 3600 * 1000
   }
 })
 
 app.use(cors())
+app.set('trust proxy', 1)
 app.use(sessionInstance)
 app.use(passport.initialize())
 app.use(passport.session())

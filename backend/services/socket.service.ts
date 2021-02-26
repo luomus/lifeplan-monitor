@@ -23,12 +23,9 @@ export class Socket {
 
   connect = (server: Server, sessionInstance: any): void => {
     const io = new IoServer(server, {
-      cors: {
-        origin: 'http://localhost:3000',
-        methods: ['GET', 'POST'],
-        credentials: true
-      }
+      cookie: true,
     })
+
     this.socketIO = io
 
     io.use(wrap(sessionInstance))

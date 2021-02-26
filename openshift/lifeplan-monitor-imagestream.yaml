@@ -15,8 +15,6 @@ spec:
         name: luomus/lifeplan-monitor:testing
       generation: null
       importPolicy: {}
-      name: ""
-      referencePolicy:
-        type: ""
+      name: testing
 status:
-  dockerImageRepository: ""
+  dockerImageRepository: "luomus/lifeplan-monitor"

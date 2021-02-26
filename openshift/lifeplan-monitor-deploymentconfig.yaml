@@ -19,75 +19,75 @@ spec:
     spec:
       containers:
         - env:
-            - name: LIFEPLAN_API_TOKEN
-                valueFrom:
-                  secretKeyRef:
-                    key: LIFEPLAN_API_TOKEN
-                    name: monitor
-            - name: LIFEPLAN_API_URL
-                valueFrom:
-                  secretKeyRef:
-                    key: LIFEPLAN_API_URL
-                    name: monitor
-            - name: MONITOR_COMPLETED_MAX_AGE
-                valueFrom:
-                  secretKeyRef:
-                    key: MONITOR_COMPLETED_MAX_AGE
-                    name: monitor
-            - name: MONITOR_DB_HOST
-                valueFrom:
-                  secretKeyRef:
-                    key: MONITOR_DB_HOST
-                    name: monitor
-            - name: MONITOR_DB_NAME
-                valueFrom:
-                  secretKeyRef:
-                    key: MONITOR_DB_NAME
-                    name: monitor
-            - name: MONITOR_DB_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    key: MONITOR_DB_PASSWORD
-                    name: monitor
-            - name: MONITOR_DB_USER
-                valueFrom:
-                  secretKeyRef:
-                    key: MONITOR_DB_USER
-                    name: monitor
-            - name: MONITOR_FAILED_MAX_AGE
-                valueFrom:
-                  secretKeyRef:
-                    key: MONITOR_FAILED_MAX_AGE
-                    name: monitor
-            - name: MONITOR_INPROGRESS_MAX_AGE
-                valueFrom:
-                  secretKeyRef:
-                    key: MONITOR_INPROGRESS_MAX_AGE
-                    name: monitor
-            - name: MONITOR_PARTIAL_MAX_AGE
-                valueFrom:
-                  secretKeyRef:
-                    key: MONITOR_PARTIAL_MAX_AGE
-                    name: monitor
-            - name: MONITOR_SECRET
-                valueFrom:
-                  secretKeyRef:
-                    key: MONITOR_SECRET
-                    name: monitor
-            - name: MONITOR_SECURE
-                valueFrom:
-                  secretKeyRef:
-                    key: MONITOR_SECURE
-                    name: monitor
-            - name: MONITOR_SESSION_DB_NAME
-                valueFrom:
-                  secretKeyRef:
-                    key: MONITOR_SESSION_DB_NAME
-                    name: monitor
+          - name: LIFEPLAN_API_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: LIFEPLAN_API_TOKEN
+                name: monitor
+          - name: LIFEPLAN_API_URL
+            valueFrom:
+              secretKeyRef:
+                key: LIFEPLAN_API_URL
+                name: monitor
+          - name: MONITOR_COMPLETED_MAX_AGE
+            valueFrom:
+              secretKeyRef:
+                key: MONITOR_COMPLETED_MAX_AGE
+                name: monitor
+          - name: MONITOR_DB_HOST
+            valueFrom:
+              secretKeyRef:
+                key: MONITOR_DB_HOST
+                name: monitor
+          - name: MONITOR_DB_NAME
+            valueFrom:
+              secretKeyRef:
+                key: MONITOR_DB_NAME
+                name: monitor
+          - name: MONITOR_DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: MONITOR_DB_PASSWORD
+                name: monitor
+          - name: MONITOR_DB_USER
+            valueFrom:
+              secretKeyRef:
+                key: MONITOR_DB_USER
+                name: monitor
+          - name: MONITOR_FAILED_MAX_AGE
+            valueFrom:
+              secretKeyRef:
+                key: MONITOR_FAILED_MAX_AGE
+                name: monitor
+          - name: MONITOR_INPROGRESS_MAX_AGE
+            valueFrom:
+              secretKeyRef:
+                key: MONITOR_INPROGRESS_MAX_AGE
+                name: monitor
+          - name: MONITOR_PARTIAL_MAX_AGE
+            valueFrom:
+              secretKeyRef:
+                key: MONITOR_PARTIAL_MAX_AGE
+                name: monitor
+          - name: MONITOR_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: MONITOR_SECRET
+                name: monitor
+          - name: MONITOR_SECURE
+            valueFrom:
+              secretKeyRef:
+                key: MONITOR_SECURE
+                name: monitor
+          - name: MONITOR_SESSION_DB_NAME
+            valueFrom:
+              secretKeyRef:
+                key: MONITOR_SESSION_DB_NAME
+                name: monitor
           image: luomus/lifeplan-monitor
           name: lifeplan-monitor
           ports:
-            - containerPort: 808
+            - containerPort: 8081
           resources: {}
       restartPolicy: Always
   test: false
@@ -99,7 +99,7 @@ spec:
           - lifeplan-monitor
         from:
           kind: ImageStreamTag
-          name: luomus/lifeplan-monitor:testing
+          name: lifeplan-monitor
       type: ImageChange
 status:
   availableReplicas: 0

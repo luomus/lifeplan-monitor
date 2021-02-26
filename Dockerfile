@@ -19,7 +19,11 @@ RUN npm run tsc
 RUN npm run build:ui
 RUN rm -rf ../frontend
 
+RUN chgrp -R 0 /srv/app/lifeplan-monitor && chmod -R g+rwX /srv/app/lifeplan-monitor
+
 EXPOSE 8081
+
+USER 1000
 
 CMD ["npm", "run", "start"]
 
