@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Card } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 import BootstrapTable from 'react-bootstrap-table-next'
 import { TokenType } from '../stores/apiToken/types'
 
@@ -36,18 +36,16 @@ const TokenTableComponent = (props: Props): JSX.Element => {
   ]
 
   return (
-    <Card style={{ width: '100%' }}>
-      <Card.Body>
-        <BootstrapTable
-          bootstrap4
-          striped
-          condensed
-          keyField='id'
-          data={props.tokens}
-          columns={columns}
-        />
-      </Card.Body>
-    </Card>
+    <div style={{ width: '100%', margin: 10 }}>
+      <BootstrapTable
+        bootstrap4
+        striped
+        condensed
+        keyField='id'
+        data={props.tokens}
+        columns={columns}
+      />
+    </div>
   )
 }
 

@@ -7,10 +7,10 @@ export const SET_ERROR = 'SET_LIFEPLAN_ERROR'
 export const CLEAR_ERROR = 'CLEAR_LIFEPLAN_ERROR'
 
 export interface CountType {
-  unporcessed: number,
-  inProgress: number,
-  completed: number,
-  failed: number
+  'activity.lifeplan.status.0': number,
+  'activity.lifeplan.status.1': number,
+  'activity.lifeplan.status.2': number,
+  'activity.lifeplan.status.3': number
 }
 
 export interface LifeplanDataType {

@@ -9,6 +9,7 @@ import {
   CheckSquareFill,
   QuestionCircleFill
 } from 'react-bootstrap-icons'
+import { Button } from 'react-bootstrap'
 
 interface Props {
   parentId?: string,
@@ -52,6 +53,14 @@ const ActivityTableComponent = (props: Props): JSX.Element => {
     }
   }
 
+  const resetButton = (cell, row): JSX.Element => {
+    return (
+      <>
+        <Button onClick={() => null} variant={'danger'} style={{ width: '100%', padding: 5 }}>Reset</Button>
+      </>
+    )
+  }
+
   const columns = [
     {
       dataField: 'status',
@@ -59,7 +68,7 @@ const ActivityTableComponent = (props: Props): JSX.Element => {
       sort: true,
       formatter: statusFormatter,
       headerStyle: {
-        width: '10%'
+        width: '7.5%'
       }
     },
     {
@@ -67,7 +76,7 @@ const ActivityTableComponent = (props: Props): JSX.Element => {
       text: 'Progress',
       formatter: progressFormatter,
       headerStyle: {
-        width: '10%'
+        width: '7.5%'
       }
     },
     {
@@ -75,7 +84,7 @@ const ActivityTableComponent = (props: Props): JSX.Element => {
       text: 'ID',
       sort: true,
       headerStyle: {
-        width: '10%'
+        width: '5%'
       }
     },
     {
@@ -90,7 +99,7 @@ const ActivityTableComponent = (props: Props): JSX.Element => {
       dataField: 'notes',
       text: 'Notes',
       headerStyle: {
-        width: '30%'
+        width: '35%'
       }
     },
     {
@@ -99,9 +108,17 @@ const ActivityTableComponent = (props: Props): JSX.Element => {
       sort: true,
       formatter: dateFromNow,
       headerStyle: {
-        width: '15%',
+        width: '10%',
       }
-    }
+    },
+    {
+      dataField: 'dummydata',
+      isDummyField: true,
+      formatter: resetButton,
+      headerStyle: {
+        width: '10%'
+      }
+    },
   ]
 
   const rowStyle = (row: ActivityType): any => {

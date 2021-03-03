@@ -14,14 +14,11 @@ const LifeplanPageComponent = (props: Props): JSX.Element => {
     <Container>
       {
         props.stats ?
-          <>
-            <div style={{ margin: 10 }}>
-              <StatsComponent title={'Lifeplan statistics'} stats={props.stats}/>
-            </div>
-          </> :
+          <StatsComponent title={'Lifeplan statistics'} stats={props.stats}/> :
           null
       }
-      <div style={{ padding: 10 }}>
+
+      <div style={{ width: '100%', margin: 10 }}>
         <Tabs>
           <Tab eventKey='activities' title='Activities'>
             <ActivityTableComponent activities={props.activities ? props.activities : []}/>

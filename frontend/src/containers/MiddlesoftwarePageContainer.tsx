@@ -21,7 +21,6 @@ type Props = ConnectedProps<typeof connector>
 const MiddlesoftwarePageContainer = (props: Props): JSX.Element => {
   const initPageData = () => {
     const activities = []
-
     const stats = {
       instances: {
         'instance.status.0': 0,

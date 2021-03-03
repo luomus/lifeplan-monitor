@@ -30,7 +30,8 @@ import {
 } from './middlesoftware/actions'
 import {
   MiddlesoftwareReducer,
-  InstanceType
+  InstanceType,
+  ActivityType
 } from './middlesoftware/types'
 import {
   persistStore,
@@ -59,6 +60,7 @@ import {
   fetchLifeplanData
 } from './lifeplan/actions'
 import {
+  CountType,
   LifeplanDataType,
   LifeplanReducer
 } from './lifeplan/types'
@@ -132,5 +134,7 @@ export type {
   UserType,
   InstanceType,
   TokenType,
-  LifeplanDataType
+  LifeplanDataType,
+  CountType,
+  ActivityType
 }

@@ -16,7 +16,7 @@ const TokenFormComponent = (props: PropsType): JSX.Element => {
   }
 
   return (
-    <Card style={{ width: '100%' }}>
+    <Card style={{ width: '100%', margin: 10 }}>
       <Card.Header>
         Add New API Token
       </Card.Header>

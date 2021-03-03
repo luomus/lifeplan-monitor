@@ -83,17 +83,15 @@ const InstanceTableComponent = (props: Props): JSX.Element => {
   ]
 
   return (
-    <>
-      <BootstrapTable
-        bootstrap4
-        striped
-        condensed
-        keyField='id'
-        data={props.instances}
-        columns={columns}
-        expandRow={expandRow}
-      />
-    </>
+    <BootstrapTable
+      bootstrap4
+      striped
+      condensed
+      keyField='id'
+      data={props.instances}
+      columns={columns}
+      expandRow={expandRow}
+    />
   )
 }
 

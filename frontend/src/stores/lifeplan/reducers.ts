@@ -7,11 +7,22 @@ import {
   LifeplanReducer,
   lifeplanActionTypes,
   CLEAR_DATA,
+  CountType,
 } from './types'
+
+const initCount: CountType = {
+  'activity.lifeplan.status.0': 0,
+  'activity.lifeplan.status.1': 0,
+  'activity.lifeplan.status.2': 0,
+  'activity.lifeplan.status.3': 0
+}
 
 const initState: LifeplanReducer = {
   error: null,
-  data: null,
+  data: {
+    count: initCount,
+    activities: []
+  },
   loading: false
 }
 

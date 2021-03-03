@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Tab, Tabs } from 'react-bootstrap'
+import { Card, Container, Nav, Tab, Tabs } from 'react-bootstrap'
 import { InstanceType } from '../stores'
 import { ActivityType } from '../stores/middlesoftware/types'
 import ActivityTableComponent from './ActivityTableComponent'
@@ -18,17 +18,13 @@ const MiddlesoftwarePage = (props: Props): JSX.Element => {
       {
         props.stats ?
           <>
-            <div style={{ margin: 10 }}>
-              <StatsComponent title={'Instance statistics'} stats={props.stats.instances}/>
-            </div>
-            <div style={{ margin: 10 }}>
-              <StatsComponent title={'Activity statistics'} stats={props.stats.activities}/>
-            </div>
+            <StatsComponent title={'Instance statistics'} stats={props.stats.instances}/>
+            <StatsComponent title={'Activity statistics'} stats={props.stats.activities}/>
           </> :
           null
       }
-      <div style={{ margin: 10 }}>
-        <Tabs>
+      <div style={{ width: '100%', margin: 10 }}>
+        <Tabs defaultActiveKey='instances'>
           <Tab eventKey='instances' title='Instances'>
             <InstanceTableComponent instances={props.instances}/>
           </Tab>
