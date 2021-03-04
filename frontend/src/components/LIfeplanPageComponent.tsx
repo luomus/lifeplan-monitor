@@ -18,7 +18,7 @@ const LifeplanPageComponent = (props: Props): JSX.Element => {
           null
       }
 
-      <div style={{ width: '100%', margin: 10 }}>
+      <div className='mb-2'>
         <Tabs>
           <Tab eventKey='activities' title='Activities'>
             <ActivityTableComponent activities={props.activities ? props.activities : []}/>

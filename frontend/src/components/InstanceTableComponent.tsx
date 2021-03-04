@@ -54,6 +54,9 @@ const InstanceTableComponent = (props: Props): JSX.Element => {
       formatter: statusFormatter,
       headerStyle: {
         width: '10%'
+      },
+      style: {
+        fontSize: '15px',
       }
     },
     {
@@ -62,6 +65,9 @@ const InstanceTableComponent = (props: Props): JSX.Element => {
       sort: true,
       headerStyle: {
         width: '30%'
+      },
+      style: {
+        fontSize: '15px',
       }
     },
     {
@@ -69,6 +75,9 @@ const InstanceTableComponent = (props: Props): JSX.Element => {
       text: 'Notes',
       headerStyle: {
         width: '40%'
+      },
+      style: {
+        fontSize: '15px',
       }
     },
     {
@@ -78,6 +87,9 @@ const InstanceTableComponent = (props: Props): JSX.Element => {
       formatter: dateFromNow,
       headerStyle: {
         width: '20%',
+      },
+      style: {
+        fontSize: '15px',
       }
     }
   ]

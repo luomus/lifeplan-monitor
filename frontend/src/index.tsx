@@ -5,6 +5,8 @@ import { store, persistor } from './stores'
 import App from './App'
 import { PersistGate } from 'redux-persist/integration/react'
 import { Spinner } from 'react-bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css'
 
 ReactDOM.render(
   <React.StrictMode>

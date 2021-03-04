@@ -15,7 +15,13 @@ const ActivityModel = (sequelize: Sequelize, DataTypes: any): ModelCtor<Model<an
       type: DataTypes.STRING,
       defaultValue: 'unknown'
     },
-    progress: {
+    currentSize: {
+      type: DataTypes.BIGINT,
+    },
+    totalSize: {
+      type: DataTypes.BIGINT,
+    },
+    duration: {
       type: DataTypes.FLOAT,
     },
     notes: {

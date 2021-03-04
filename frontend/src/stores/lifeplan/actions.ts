@@ -32,7 +32,7 @@ export const setData = (data: LifeplanDataType): lifeplanActionTypes => {
   }
 }
 
-// export const resetActivity = (id: number): ThunkAction<void, any, null, lifeplanActionTypes> => {
+// export const resetLifeplanActivity = (id: number): ThunkAction<void, any, null, lifeplanActionTypes> => {
 //   return (dispatch, getState) => {
 //     const { lifeplan } = getState()
 

@@ -23,7 +23,7 @@ const MiddlesoftwarePage = (props: Props): JSX.Element => {
           </> :
           null
       }
-      <div style={{ width: '100%', margin: 10 }}>
+      <div className='mb-2'>
         <Tabs defaultActiveKey='instances'>
           <Tab eventKey='instances' title='Instances'>
             <InstanceTableComponent instances={props.instances}/>

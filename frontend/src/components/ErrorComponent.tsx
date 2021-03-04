@@ -1,21 +1,23 @@
 import React from 'react'
 import { Alert, Container } from 'react-bootstrap'
 import { connect, ConnectedProps } from 'react-redux'
-import { clearTokenError, clearMiddlesoftwareError, clearUserError, RootState } from '../stores'
+import { clearTokenError, clearMiddlesoftwareError, clearLifeplanError, clearUserError, RootState } from '../stores'
 
 const mapStateToProps = (state: RootState) => {
-  const { apiToken, user, middlesoftware } = state
+  const { apiToken, user, middlesoftware, lifeplan } = state
 
   return {
     apiToken,
     user,
-    middlesoftware
+    middlesoftware,
+    lifeplan
   }
 }
 
 const mapDispatchToProps = {
   clearTokenError,
   clearMiddlesoftwareError,
+  clearLifeplanError,
   clearUserError
 }
 
@@ -30,7 +32,7 @@ const ErrorComponent = (props: Props): JSX.Element => {
   const createError = (target): JSX.Element => {
     if (target.error) {
       return (
-        <Alert key={target.key} variant={'danger'} onClose={target.clearError} dismissible style={{ width: '100%', padding: 10 }}>
+        <Alert key={target.key} variant={'danger'} onClose={target.clearError} dismissible className='mb-2'>
           <Alert.Heading>{'Error'}</Alert.Heading>
           <p>{target.error}</p>
         </Alert>
@@ -42,7 +44,8 @@ const ErrorComponent = (props: Props): JSX.Element => {
     const errorlist = [
       { key: 'token', error: props.apiToken.error, clearError: props.clearTokenError },
       { key: 'middlesoftware', error: props.middlesoftware.error, clearError: props.clearMiddlesoftwareError },
-      { key: 'user', error: props.user.error, clearError: props.clearUserError }
+      { key: 'user', error: props.user.error, clearError: props.clearUserError },
+      { key: 'lifeplan', error: props.lifeplan.error, clearError: props.clearLifeplanError }
     ]
 
     return (

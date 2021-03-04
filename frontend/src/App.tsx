@@ -6,8 +6,6 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css'
 import LoginFormContainer from './containers/LoginPageContainer'
 import { RootState } from './stores'
 import MiddlesoftwarePageContainer from './containers/MiddlesoftwarePageContainer'

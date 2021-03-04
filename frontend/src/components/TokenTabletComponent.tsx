@@ -36,7 +36,7 @@ const TokenTableComponent = (props: Props): JSX.Element => {
   ]
 
   return (
-    <div style={{ width: '100%', margin: 10 }}>
+    <div className='mb-2'>
       <BootstrapTable
         bootstrap4
         striped

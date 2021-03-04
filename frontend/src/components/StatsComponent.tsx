@@ -8,7 +8,7 @@ type Props = {
 
 const StatsComponent = ({ stats, title }: Props): JSX.Element => {
   return (
-    <Card style={{ width: '100%', margin: 10 }}>
+    <Card className='mb-2'>
       <Card.Header>
         {title}
       </Card.Header>

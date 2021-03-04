@@ -11,3 +11,14 @@ export const getLifeplanData = async (): Promise<LifeplanDataType> => {
 
   return res.data
 }
+
+export const resetLifeplanActivity = async (): Promise<number> => {
+  const res = await axios.post(
+    '/api/lifeplan/reset',
+    {
+      withCredentials: true,
+    }
+  )
+
+  return res.data
+}

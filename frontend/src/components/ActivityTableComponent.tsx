@@ -7,9 +7,11 @@ import {
   XOctagonFill,
   ArrowDownUp,
   CheckSquareFill,
-  QuestionCircleFill
+  QuestionCircleFill,
+  Trash
 } from 'react-bootstrap-icons'
 import { Button } from 'react-bootstrap'
+import moment from 'moment'
 
 interface Props {
   parentId?: string,
@@ -25,9 +27,35 @@ const ActivityTableComponent = (props: Props): JSX.Element => {
     return 'N/A'
   }
 
-  const progressFormatter = (cell: number | null): string => {
+  const progressFormatter = (cell, row): string => {
+    if (row.currentSize && row.totalSize > 0) {
+      return `${(row.currentSize / row.totalSize * 100).toFixed(1)}%`
+    }
+
+    return 'N/A'
+  }
+
+  const sizeFormatter = (cell: number | null): string => {
     if (cell) {
-      return `${cell.toFixed(1)}%`
+      if (cell / 10 ** 12 >= 1.0) {
+        return `${(cell / 10 ** 12).toFixed(1)}TB`
+      } else if (cell / 10 ** 9 >= 1.0) {
+        return `${(cell / 10 ** 9).toFixed(1)}GB`
+      } else if (cell / 10 ** 6 >= 1.0) {
+        return `${(cell / 10 ** 6).toFixed(1)}MB`
+      }  else if (cell / 10 ** 3 >= 1.0) {
+        return `${(cell / 10 ** 3).toFixed(1)}kB`
+      } else {
+        return `${cell}B`
+      }
+    }
+
+    return 'N/A'
+  }
+
+  const durationFormatter = (cell: number | null): string => {
+    if (cell) {
+      return Math.floor(moment.duration(cell).asHours()) + moment.utc(cell).format(':mm:ss')
     }
 
     return 'N/A'
@@ -43,6 +71,7 @@ const ActivityTableComponent = (props: Props): JSX.Element => {
       case 'activity.lifeplan.status.1':
         return <ArrowDownUp size={size} color='green'/>
       case 'activity.status.2':
+        return <Trash size={size} color='green'/>
       case 'activity.status.3':
         return <CheckSquareFill size={size} color='green'/>
       case 'activity.lifeplan.status.3':
@@ -64,19 +93,23 @@ const ActivityTableComponent = (props: Props): JSX.Element => {
   const columns = [
     {
       dataField: 'status',
-      text: 'Status',
+      text: 'State',
       sort: true,
       formatter: statusFormatter,
       headerStyle: {
-        width: '7.5%'
+        width: '6%'
       }
     },
     {
-      dataField: 'progress',
-      text: 'Progress',
+      dataField: 'dummydata1',
+      isDummyField: true,
+      text: 'Prog.',
       formatter: progressFormatter,
       headerStyle: {
-        width: '7.5%'
+        width: '6.5%'
+      },
+      style: {
+        fontSize: '15px',
       }
     },
     {
@@ -85,6 +118,9 @@ const ActivityTableComponent = (props: Props): JSX.Element => {
       sort: true,
       headerStyle: {
         width: '5%'
+      },
+      style: {
+        fontSize: '15px',
       }
     },
     {
@@ -92,14 +128,20 @@ const ActivityTableComponent = (props: Props): JSX.Element => {
       text: 'UUID',
       sort: true,
       headerStyle: {
-        width: '35%'
+        width: '30%'
+      },
+      style: {
+        fontSize: '15px',
       }
     },
     {
       dataField: 'notes',
       text: 'Notes',
       headerStyle: {
-        width: '35%'
+        width: '25%'
+      },
+      style: {
+        fontSize: '15px',
       }
     },
     {
@@ -108,15 +150,40 @@ const ActivityTableComponent = (props: Props): JSX.Element => {
       sort: true,
       formatter: dateFromNow,
       headerStyle: {
-        width: '10%',
+        width: '15%',
+      },
+      style: {
+        fontSize: '15px',
       }
     },
     {
-      dataField: 'dummydata',
+      dataField: 'totalSize',
+      text: 'Size',
+      formatter: sizeFormatter,
+      headerStyle: {
+        width: '7.5%'
+      },
+      style: {
+        fontSize: '15px',
+      }
+    },
+    {
+      dataField: 'duration',
+      text: 'Duration',
+      formatter: durationFormatter,
+      headerStyle: {
+        width: '7.5%'
+      },
+      style: {
+        fontSize: '15px',
+      }
+    },
+    {
+      dataField: 'dummydata2',
       isDummyField: true,
       formatter: resetButton,
       headerStyle: {
-        width: '10%'
+        width: '7.5%'
       }
     },
   ]
