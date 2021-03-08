@@ -46,6 +46,8 @@ const MiddlesoftwarePageContainer = (props: Props): JSX.Element => {
       }
     }
 
+    let counter = 0
+
     props.middlesoftware.instances.forEach(instance => {
       stats.instances[instance.status]++
 
@@ -55,6 +57,7 @@ const MiddlesoftwarePageContainer = (props: Props): JSX.Element => {
 
           if (activity.status === 'activity.status.3' && activity.totalSize > 0.0 && activity.duration > 0.0) {
             stats.activities['activity.averagerate'] += activity.totalSize / activity.duration
+            counter++
           }
 
           activities.push(activity)
@@ -64,8 +67,8 @@ const MiddlesoftwarePageContainer = (props: Props): JSX.Element => {
       })
     })
 
-    if (activities.length > 0) {
-      stats.activities['activity.averagerate'] /= activities.length
+    if (counter > 0) {
+      stats.activities['activity.averagerate'] /= counter
     }
 
     return { activities, stats }
