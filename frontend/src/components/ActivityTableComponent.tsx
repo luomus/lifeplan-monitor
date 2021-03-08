@@ -1,6 +1,7 @@
 import Moment from 'react-moment'
 import React from 'react'
 import BootstrapTable from 'react-bootstrap-table-next'
+import PaginationFactory from 'react-bootstrap-table2-paginator'
 import { ActivityType } from '../stores/middlesoftware/types'
 import {
   Hourglass,
@@ -15,7 +16,8 @@ import moment from 'moment'
 
 interface Props {
   parentId?: string,
-  activities: ActivityType[]
+  activities: ActivityType[],
+  onResetButton: (id: number) => void
 }
 
 const ActivityTableComponent = (props: Props): JSX.Element => {
@@ -85,7 +87,7 @@ const ActivityTableComponent = (props: Props): JSX.Element => {
   const resetButton = (cell, row): JSX.Element => {
     return (
       <>
-        <Button onClick={() => null} variant={'danger'} style={{ width: '100%', padding: 5 }}>Reset</Button>
+        <Button onClick={() => props.onResetButton(row.id)} variant={'danger'} style={{ width: '100%', padding: 5 }}>Reset</Button>
       </>
     )
   }
@@ -194,6 +196,10 @@ const ActivityTableComponent = (props: Props): JSX.Element => {
     }
   }
 
+  const pagination = PaginationFactory({
+    showTotal: true
+  })
+
   return (
     <BootstrapTable
       bootstrap4
@@ -203,6 +209,7 @@ const ActivityTableComponent = (props: Props): JSX.Element => {
       data={props.activities}
       columns={columns}
       rowStyle={rowStyle}
+      pagination={pagination}
     />
   )
 }

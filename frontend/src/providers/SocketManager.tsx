@@ -93,6 +93,10 @@ const SocketManager = (props: Props): JSX.Element => {
         props.deleteInstance(data)
       })
 
+      socket.on('delete_activity', (data) => {
+        null
+      })
+
     } catch (err) {
       props.setUserError(`Socket error: ${err}`)
     }

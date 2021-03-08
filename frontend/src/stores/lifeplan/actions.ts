@@ -1,5 +1,6 @@
 import { ThunkAction } from 'redux-thunk'
-import { getLifeplanData } from '../../services/lifeplan'
+import { ActivityType } from '..'
+import { getLifeplanData, resetLifeplanActivity } from '../../services/lifeplan'
 import {
   CLEAR_ERROR,
   CLEAR_DATA,
@@ -32,17 +33,35 @@ export const setData = (data: LifeplanDataType): lifeplanActionTypes => {
   }
 }
 
-// export const resetLifeplanActivity = (id: number): ThunkAction<void, any, null, lifeplanActionTypes> => {
-//   return (dispatch, getState) => {
-//     const { lifeplan } = getState()
+export const resetAndRemoveLifeplanActivity = (id: number): ThunkAction<Promise<any>, any, null, lifeplanActionTypes> => {
+  return async (dispatch, getState) => {
+    const { lifeplan } = getState()
 
-//     const newActivities = lifeplan.activities.filter((activity: LifeplanActivityType) => {
-//       return activity.id !== id
-//     })
+    try {
+      await resetLifeplanActivity(id)
 
-//     dispatch(setActivities(newActivities))
-//   }
-// }
+      const newCount = { ...lifeplan.data.count }
+      const newActivities = lifeplan.data.activities.filter((activity: ActivityType) => {
+        if (activity.id === id) {
+          newCount[activity.status] -= 1
+          newCount['activity.lifeplan.status.0'] += 1
+        }
+
+        return activity.id !== id
+      })
+
+      dispatch(setData({
+        count: newCount,
+        activities: newActivities
+      }))
+
+      return Promise.resolve()
+    } catch (err) {
+      dispatch(setLifeplanError(`${err.response?.status}: ${err.response?.data?.error}`))
+      return Promise.reject()
+    }
+  }
+}
 
 export const clearData = (): lifeplanActionTypes => {
   return {
@@ -50,13 +69,13 @@ export const clearData = (): lifeplanActionTypes => {
   }
 }
 
-const setLifeplanLoading = (): lifeplanActionTypes => {
+export const setLifeplanLoading = (): lifeplanActionTypes => {
   return {
     type: SET_LOADING
   }
 }
 
-const clearLifeplanLoading = (): lifeplanActionTypes => {
+export const clearLifeplanLoading = (): lifeplanActionTypes => {
   return {
     type: CLEAR_LOADING
   }

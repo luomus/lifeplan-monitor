@@ -42,3 +42,19 @@ export const getActivities = async (processingStatus: string, activities: Array<
 
   return activities
 }
+
+export const resetActivity = async (id: string): Promise<number> => {
+  const payload = {
+    processing_status: 'unprocessed'
+  }
+
+  const res = await axios.patch(
+    process.env.LIFEPLAN_API_URL ? `${process.env.LIFEPLAN_API_URL}/${id}` : '',
+    payload,
+    {
+      headers
+    }
+  )
+
+  return res.data.id
+}

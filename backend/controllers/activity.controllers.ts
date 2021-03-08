@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { Transaction } from 'sequelize/types'
-import db from '../models/index'
+import db from '../models'
 import socket from '../services/socket.service'
 
 export const updateActivityById = async (req: Request, res: Response): Promise<void> => {

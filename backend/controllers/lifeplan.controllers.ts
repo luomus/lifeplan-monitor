@@ -1,5 +1,7 @@
 import { Request, Response } from 'express'
-import { getActivities, getTotalCount } from '../services/lifeplan.service'
+import { getActivities, getTotalCount, resetActivity } from '../services/lifeplan.service'
+import db from '../models'
+import socket from '../services/socket.service'
 
 export const getLifeplanData = async (req: Request, res: Response): Promise<void> => {
   const getPrunedList = async (status: string): Promise<any[]> => {
@@ -79,4 +81,25 @@ export const getLifeplanData = async (req: Request, res: Response): Promise<void
   }
 
   res.status(200).send(toReturn)
+}
+
+export const resetLifeplanActivity = async (req: Request, res: Response) => {
+  try {
+    await resetActivity(req.params.id)
+
+  } catch (err) {
+    res.status(500).json({
+      error: `Proxy request to Lifepan backend for resetting activity ${req.body} failed with status ${err.response.status}`
+    })
+  }
+  const activity = await db.Activity.findOne({
+    where: {
+      id: req.params.id
+    }
+  })
+
+  await activity?.destroy()
+
+  res.status(200).send()
+  socket.connection()?.emit('delete_activity', req.params.id)
 }

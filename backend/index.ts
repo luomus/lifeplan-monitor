@@ -114,7 +114,7 @@ const sessionInstance = session({
   unset: 'destroy',
   cookie: {
     secure: (process.env.MONITOR_SECURE === 'true'),
-    maxAge: 24 * 3600 * 1000
+    maxAge: 8 * 3600 * 1000
   }
 })
 

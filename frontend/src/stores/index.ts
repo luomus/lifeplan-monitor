@@ -64,6 +64,7 @@ import {
   LifeplanDataType,
   LifeplanReducer
 } from './lifeplan/types'
+import { resetActivity } from './shared/actions'
 
 export interface RootState {
   apiToken: TokenReducer,
@@ -124,7 +125,8 @@ export {
   removeToken,
   clearTokenError,
   fetchLifeplanData,
-  clearLifeplanError
+  clearLifeplanError,
+  resetActivity
 }
 
 export type {

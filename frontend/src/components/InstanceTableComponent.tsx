@@ -1,6 +1,7 @@
 import Moment from 'react-moment'
 import React from 'react'
 import BootstrapTable from 'react-bootstrap-table-next'
+import PaginationFactory from 'react-bootstrap-table2-paginator'
 import { InstanceType } from '../stores'
 import ActivityTableComponent from './ActivityTableComponent'
 import {
@@ -12,13 +13,14 @@ import {
 } from 'react-bootstrap-icons'
 
 interface Props {
-  instances: InstanceType[]
+  instances: InstanceType[],
+  onResetButton: (id: number) => void
 }
 
 const InstanceTableComponent = (props: Props): JSX.Element => {
   const expandRow = {
     //eslint-disable-next-line react/display-name
-    renderer: (row: InstanceType) => <ActivityTableComponent activities={row.activities} parentId={row.id}/>
+    renderer: (row: InstanceType) => <ActivityTableComponent activities={row.activities} parentId={row.id} onResetButton={props.onResetButton}/>
   }
 
   const dateFromNow = (cell: string): JSX.Element | string => {
@@ -94,6 +96,10 @@ const InstanceTableComponent = (props: Props): JSX.Element => {
     }
   ]
 
+  const pagination = PaginationFactory({
+    showTotal: true
+  })
+
   return (
     <BootstrapTable
       bootstrap4
@@ -103,6 +109,7 @@ const InstanceTableComponent = (props: Props): JSX.Element => {
       data={props.instances}
       columns={columns}
       expandRow={expandRow}
+      pagination={pagination}
     />
   )
 }

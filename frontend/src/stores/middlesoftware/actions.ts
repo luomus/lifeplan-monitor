@@ -9,7 +9,9 @@ import {
   SET_ERROR,
   SET_INSTANCES,
   ActivityType,
-  ExtendedActivityType
+  ExtendedActivityType,
+  SET_LOADING,
+  CLEAR_LOADING
 } from './types'
 
 export const setInstances = (instances: InstanceType[]): middlesoftwareActionTypes => {
@@ -86,9 +88,42 @@ export const deleteInstance = (id: string): ThunkAction<void, any, null, middles
   }
 }
 
+export const deleteActivity = (id: number): ThunkAction<Promise<void>, any, null, middlesoftwareActionTypes> => {
+  return (dispatch, getState) => {
+    const { middlesoftware } = getState()
+
+    const newInstances = middlesoftware.instances.map((oldInstance: InstanceType) => {
+      const oldActivities = oldInstance.activities
+      const newActivities = oldActivities.filter((oldActivity: ActivityType) => {
+        return oldActivity.id !== id
+      })
+
+      return {
+        ...oldInstance,
+        activities: newActivities
+      }
+    })
+
+    dispatch(setInstances(newInstances))
+    return Promise.resolve()
+  }
+}
+
 export const clearInstances = (): middlesoftwareActionTypes => {
   return {
     type: CLEAR_INSTANCES
+  }
+}
+
+export const setMiddlesoftwareLoading = (): middlesoftwareActionTypes => {
+  return {
+    type: SET_LOADING
+  }
+}
+
+export const clearMiddlesoftwareLoading = (): middlesoftwareActionTypes => {
+  return {
+    type: CLEAR_LOADING
   }
 }
 
