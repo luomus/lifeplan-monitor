@@ -7,6 +7,29 @@ type Props = {
 }
 
 const StatsComponent = ({ stats, title }: Props): JSX.Element => {
+
+  const formatter = (key: string, data: string | number) => {
+    if (key !== 'activity.averagerate') {
+      return data
+    }
+
+    if (typeof data !== 'number') {
+      return data
+    }
+
+    const dataInSec = data * 1000
+
+    if (dataInSec / 10 ** 9 > 1.0) {
+      return `${(dataInSec / 10 ** 9).toFixed(2)} GB/s`
+    } else if (dataInSec / 10 ** 6 > 1.0) {
+      return `${(dataInSec / 10 ** 6).toFixed(2)} MB/s`
+    } else if (dataInSec / 10 ** 3 > 1.0) {
+      return `${(dataInSec / 10 ** 3).toFixed(2)} kB/s`
+    } else {
+      return `${dataInSec.toFixed(2)} B/s`
+    }
+  }
+
   return (
     <Card className='mb-2'>
       <Card.Header>
@@ -18,7 +41,7 @@ const StatsComponent = ({ stats, title }: Props): JSX.Element => {
             return (
               <Col md={3} key={key}>
                 <Row>
-                  <Col md={8}>{statusDict[key]}:</Col><Col md={4}>{stats[key]}</Col>
+                  <Col md={6}>{statusDict[key]}:</Col><Col md={6}>{formatter(key, stats[key])}</Col>
                 </Row>
               </Col>
             )

@@ -41,7 +41,8 @@ const MiddlesoftwarePageContainer = (props: Props): JSX.Element => {
         'activity.status.2': 0,
         'activity.status.3': 0,
         'activity.status.4': 0,
-        'activity.duplicates': 0
+        'activity.duplicates': 0,
+        'activity.averagerate': 0.0 //byte/ms
       }
     }
 
@@ -52,12 +53,20 @@ const MiddlesoftwarePageContainer = (props: Props): JSX.Element => {
         if (!activities.find(foundActivity => foundActivity.id === activity.id)) {
           stats.activities[activity.status]++
 
+          if (activity.status === 'activity.status.3' && activity.totalSize > 0.0 && activity.duration > 0.0) {
+            stats.activities['activity.averagerate'] += activity.totalSize / activity.duration
+          }
+
           activities.push(activity)
         } else {
           stats.activities['activity.duplicates']++
         }
       })
     })
+
+    if (activities.length > 0) {
+      stats.activities['activity.averagerate'] /= activities.length
+    }
 
     return { activities, stats }
   }

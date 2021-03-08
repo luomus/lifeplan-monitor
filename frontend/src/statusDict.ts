@@ -12,5 +12,6 @@ export const statusDict = {
   'activity.lifeplan.status.1': 'In-Progress',
   'activity.lifeplan.status.2': 'Completed',
   'activity.lifeplan.status.3': 'Failed',
-  'activity.duplicates': 'Duplicates'
+  'activity.duplicates': 'Duplicates',
+  'activity.averagerate': 'Average rate'
 }
