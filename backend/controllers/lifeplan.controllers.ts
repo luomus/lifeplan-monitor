@@ -99,7 +99,6 @@ export const resetLifeplanActivity = async (req: Request, res: Response) => {
   })
 
   await activity?.destroy()
-
-  res.status(200).send()
   socket.connection()?.emit('delete_activity', req.params.id)
+  res.status(200).send()
 }

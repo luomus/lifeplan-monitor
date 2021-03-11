@@ -11,9 +11,11 @@ import {
   ExclamationDiamondFill,
   CheckSquareFill
 } from 'react-bootstrap-icons'
+import { Button } from 'react-bootstrap'
 
 interface Props {
   instances: InstanceType[],
+  onStopButton: (id: string) => void,
   onResetButton: (id: number) => void
 }
 
@@ -48,6 +50,14 @@ const InstanceTableComponent = (props: Props): JSX.Element => {
     }
   }
 
+  const stopButton = (cell, row): JSX.Element => {
+    return (
+      <>
+        <Button disabled={row.status !== 'instance.status.0'} onClick={() => props.onStopButton(row.id)} variant={'danger'} size='sm' style={{ width: '100%', padding: 5 }}>Set Stopped</Button>
+      </>
+    )
+  }
+
   const columns = [
     {
       dataField: 'status',
@@ -76,7 +86,7 @@ const InstanceTableComponent = (props: Props): JSX.Element => {
       dataField: 'notes',
       text: 'Notes',
       headerStyle: {
-        width: '40%'
+        width: '35%'
       },
       style: {
         fontSize: '15px',
@@ -88,12 +98,20 @@ const InstanceTableComponent = (props: Props): JSX.Element => {
       sort: true,
       formatter: dateFromNow,
       headerStyle: {
-        width: '20%',
+        width: '15%',
       },
       style: {
         fontSize: '15px',
       }
-    }
+    },
+    {
+      dataField: 'dummydata',
+      isDummyField: true,
+      formatter: stopButton,
+      headerStyle: {
+        width: '10%'
+      }
+    },
   ]
 
   const pagination = PaginationFactory({

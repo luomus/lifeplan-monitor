@@ -7,6 +7,7 @@ import {
   addInstance,
   updateInstance,
   deleteInstance,
+  deleteActivity,
   updateInstanceAndActivity,
   userLogout,
   setUserError
@@ -26,6 +27,7 @@ const mapDispatchToProps = {
   addInstance,
   updateInstance,
   deleteInstance,
+  deleteActivity,
   updateInstanceAndActivity,
   userLogout,
   setUserError
@@ -94,7 +96,7 @@ const SocketManager = (props: Props): JSX.Element => {
       })
 
       socket.on('delete_activity', (data) => {
-        null
+        props.deleteActivity(data)
       })
 
     } catch (err) {

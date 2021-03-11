@@ -2,7 +2,10 @@ import { Request, Response } from 'express'
 import db from '../models'
 import { Op, Transaction } from 'sequelize'
 import socket from '../services/socket.service'
+import { resetActivity } from '../services/lifeplan.service'
 
+
+//For cleaning up instances that have gotten older than each types max ages, also remove activities that have been processed by them
 export const cleanupInstances = async (): Promise<void> => {
   const msDate = new Date().getTime()
   const include = [{
@@ -35,6 +38,7 @@ export const cleanupInstances = async (): Promise<void> => {
   const partialMaxAge = process.env.MONITOR_PARTIAL_MAX_AGE
   const failedMaxAge = process.env.MONITOR_FAILED_MAX_AGE
 
+  //Is already checked in index.ts, so should not trigger outside of very unexpected cases
   if ( !(inprogressMaxAge && completedMaxAge && partialMaxAge && failedMaxAge)) {
     console.error('Missing database max age envionmetal variables.')
     return
@@ -61,12 +65,83 @@ export const cleanupInstances = async (): Promise<void> => {
       }))
 
       await instance.destroy({ transaction: t })
-
       return instance.id
     })
 
+    //If nothing goes wrong in transaction update all running fronts via socket
     socket.connection()?.emit('delete_instance', result)
   }))
+}
+
+
+//Used in case of the openshift pod running middlesoftware getting stuck and being removed to clean it up on the monitor
+export const stopInstance = async (req: Request, res: Response) => {
+  //find instance and only the activity being processed by it.
+  const instance = await db.Instance.findOne({
+    where: {
+      id: req.params.id
+    },
+    include: [{
+      model: db.Activity,
+      required: false,
+      as: 'activities',
+      through: {
+        attributes: []
+      },
+      where: {
+        [Op.and]: {
+          status: { [Op.or]: [
+            'activity.status.1',
+            'activity.status.2'
+          ] },
+          processedBy: { [Op.col]: 'Instance.id' }
+        }
+      },
+    }]
+  })
+
+  //An instance should only have one activity in-progres or under deletion at a time, so this should not trigger normally
+  if (instance.activities.length > 1) {
+    return res.status(500).json({
+      error: `Expected at maximum one activity belonging to instance to be either in in-progress or deleting state, found ${instance.activities.length} activities.`
+    })
+  }
+
+  //Switch instance to partial failure state and notify that it had been forcibly switched
+  instance.update({
+    status: 'instance.status.2',
+    notes: 'Forcibly stopped.'
+  })
+
+  //remove activities from instance, as activity removal will be done later on, send update trough socket.
+  // @ts-ignore
+  const { activities, ...rest } = instance.toJSON()
+  socket.connection()?.emit('update_instance', rest)
+
+  const activity = instance.activities[0]
+
+  if (!activity) {
+    return res.status(200).send(rest)
+  }
+
+  const id = activity.id
+
+  //try to reset activity on lifeplan backend, else pass error along to frontend
+  try {
+    await resetActivity(id)
+
+  } catch (err) {
+    return res.status(500).json({
+      error: `Proxy request to Lifepan backend for resetting activity ${id} failed with status ${err.response.status}.`
+    })
+  }
+
+
+  activity.destroy()
+
+  //pass removal along to running front sessions witch socket
+  socket.connection()?.emit('delete_activity', id)
+  return res.status(200).send(instance.toJSON())
 }
 
 export const getAllInstaces = async (req: Request, res: Response): Promise<void> => {
@@ -94,6 +169,7 @@ export const addInstance = async (req: Request, res: Response): Promise<void> =>
 
     const activities = req.body.instance.activities
 
+    //Due to the way middlesoftware is currently used, should not activate, as activities are sent by ms later
     if (activities) {
       toReturn.activities = []
 
@@ -123,8 +199,8 @@ export const addInstance = async (req: Request, res: Response): Promise<void> =>
     return toReturn
   })
 
-  res.status(201).send(result)
   socket.connection()?.emit('add_instance', result)
+  res.status(201).send(result)
 }
 
 export const updateInstanceById = async (req: Request, res: Response): Promise<void> => {
@@ -186,8 +262,8 @@ export const updateInstanceById = async (req: Request, res: Response): Promise<v
     return toReturn
   })
 
-  res.status(200).send(result)
   socket.connection()?.emit('update_instance', result)
+  res.status(200).send(result)
 }
 
 const timedInstanceDelete = (id: string) => {
@@ -233,6 +309,6 @@ export const deleteInstanceById = async (req: Request, res: Response): Promise<v
     return req.params.id
   })
 
-  res.status(204).send()
   socket.connection()?.emit('delete_instance', result)
+  res.status(204).send()
 }

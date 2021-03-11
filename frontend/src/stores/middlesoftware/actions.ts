@@ -13,6 +13,7 @@ import {
   SET_LOADING,
   CLEAR_LOADING
 } from './types'
+import { stopInstanceAndResetActivity } from '../../services/instance'
 
 export const setInstances = (instances: InstanceType[]): middlesoftwareActionTypes => {
   return {
@@ -73,6 +74,20 @@ export const updateInstanceAndActivity = (updatedActivity: ExtendedActivityType)
     })
 
     dispatch(setInstances(newInstances))
+  }
+}
+
+export const stopInstance = (id: string): ThunkAction<void, any, null, middlesoftwareActionTypes> => {
+  return async (dispatch) => {
+    dispatch(setMiddlesoftwareLoading())
+
+    try {
+      await stopInstanceAndResetActivity(id)
+    } catch (err) {
+      dispatch(setMiddlesoftwareError(`${err.response.status}: ${err.response.data.error}`))
+    } finally {
+      dispatch(clearMiddlesoftwareLoading())
+    }
   }
 }
 

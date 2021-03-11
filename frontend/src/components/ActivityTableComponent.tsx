@@ -87,7 +87,7 @@ const ActivityTableComponent = (props: Props): JSX.Element => {
   const resetButton = (cell, row): JSX.Element => {
     return (
       <>
-        <Button onClick={() => props.onResetButton(row.id)} variant={'danger'} style={{ width: '100%', padding: 5 }}>Reset</Button>
+        <Button onClick={() => props.onResetButton(row.id)} variant={'danger'} size='sm' style={{ width: '100%', padding: 5 }}>Reset</Button>
       </>
     )
   }

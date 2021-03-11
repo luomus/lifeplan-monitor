@@ -21,12 +21,14 @@ import {
 import {
   addInstance,
   deleteInstance,
+  deleteActivity,
   setInstances,
   updateInstance,
   clearInstances,
   setMiddlesoftwareError,
   clearMiddlesoftwareError,
-  updateInstanceAndActivity
+  updateInstanceAndActivity,
+  stopInstance
 } from './middlesoftware/actions'
 import {
   MiddlesoftwareReducer,
@@ -116,6 +118,7 @@ export {
   addInstance,
   updateInstance,
   deleteInstance,
+  deleteActivity,
   clearInstances,
   updateInstanceAndActivity,
   setMiddlesoftwareError,
@@ -126,7 +129,8 @@ export {
   clearTokenError,
   fetchLifeplanData,
   clearLifeplanError,
-  resetActivity
+  resetActivity,
+  stopInstance
 }
 
 export type {

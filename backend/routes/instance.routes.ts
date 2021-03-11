@@ -4,6 +4,7 @@ import {
   updateInstanceById,
   deleteInstanceById,
   getAllInstaces,
+  stopInstance,
 
 } from '../controllers/instance.controllers'
 
@@ -23,6 +24,10 @@ instanceRouter.patch('/:id', async (req: Request, res: Response) => {
 
 instanceRouter.delete('/:id', async (req: Request, res: Response) => {
   await deleteInstanceById(req, res)
+})
+
+instanceRouter.patch('/stop/:id', async (req: Request, res: Response) => {
+  await stopInstance(req, res)
 })
 
 export default instanceRouter

@@ -11,6 +11,8 @@ interface Props {
   instances: InstanceType[],
   activities: ActivityType[],
   stats: Record<string, any> | null,
+  onStopButton: (id: string) => void,
+  stopModalParams: ModalParamsType,
   onResetButton: (id: number) => void,
   resetModalParams: ModalParamsType
 }
@@ -29,7 +31,7 @@ const MiddlesoftwarePage = (props: Props): JSX.Element => {
       <div className='mb-2'>
         <Tabs defaultActiveKey='instances'>
           <Tab eventKey='instances' title='Instances'>
-            <InstanceTableComponent instances={props.instances} onResetButton={props.onResetButton}/>
+            <InstanceTableComponent instances={props.instances} onStopButton={props.onStopButton} onResetButton={props.onResetButton}/>
           </Tab>
           <Tab eventKey='activities' title='Activities'>
             <ActivityTableComponent activities={props.activities} onResetButton={props.onResetButton}/>
@@ -37,6 +39,7 @@ const MiddlesoftwarePage = (props: Props): JSX.Element => {
         </Tabs>
       </div>
       <ConfirmationModalComponent modalParams={props.resetModalParams}/>
+      <ConfirmationModalComponent modalParams={props.stopModalParams}/>
     </Container>
   )
 }

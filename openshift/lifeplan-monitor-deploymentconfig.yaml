@@ -65,8 +65,8 @@ spec:
                 key: MONITOR_INPROGRESS_MAX_AGE
                 name: lifeplan-monitor
           - name: MONITOR_PARTIAL_MAX_AGE
-            configMapFrom:
-              secretKeyRef:
+            valueFrom:
+              configMapKeyRef:
                 key: MONITOR_PARTIAL_MAX_AGE
                 name: lifeplan-monitor
           - name: MONITOR_SECRET
