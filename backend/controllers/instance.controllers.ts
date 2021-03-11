@@ -100,6 +100,13 @@ export const stopInstance = async (req: Request, res: Response) => {
     }]
   })
 
+  //Check that instances status is processing as expected.
+  if (instance.status !== 'instance.status.0') {
+    return res.status(500).json({
+      error: 'Setting instances status to stopped is only allowed if instances state is processing.'
+    })
+  }
+
   //An instance should only have one activity in-progres or under deletion at a time, so this should not trigger normally
   if (instance.activities.length > 1) {
     return res.status(500).json({

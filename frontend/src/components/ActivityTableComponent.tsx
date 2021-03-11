@@ -30,8 +30,8 @@ const ActivityTableComponent = (props: Props): JSX.Element => {
   }
 
   const progressFormatter = (cell, row): string => {
-    if (row.currentSize && row.totalSize > 0) {
-      return `${(row.currentSize / row.totalSize * 100).toFixed(1)}%`
+    if (cell && row.totalSize > 0) {
+      return `${(cell / row.totalSize * 100).toFixed(1)}%`
     }
 
     return 'N/A'
@@ -87,7 +87,11 @@ const ActivityTableComponent = (props: Props): JSX.Element => {
   const resetButton = (cell, row): JSX.Element => {
     return (
       <>
-        <Button onClick={() => props.onResetButton(row.id)} variant={'danger'} size='sm' style={{ width: '100%', padding: 5 }}>Reset</Button>
+        {
+          row.status !== 'activity.status.0' ?
+            <Button disabled={props.parentId && props.parentId !== cell} onClick={() => props.onResetButton(row.id)} variant={'danger'} size='sm' style={{ width: '100%', padding: 5 }}>Reset</Button> :
+            null
+        }
       </>
     )
   }
@@ -103,8 +107,7 @@ const ActivityTableComponent = (props: Props): JSX.Element => {
       }
     },
     {
-      dataField: 'dummydata1',
-      isDummyField: true,
+      dataField: 'currentSize',
       text: 'Prog.',
       formatter: progressFormatter,
       headerStyle: {
@@ -181,8 +184,7 @@ const ActivityTableComponent = (props: Props): JSX.Element => {
       }
     },
     {
-      dataField: 'dummydata2',
-      isDummyField: true,
+      dataField: 'processedBy',
       formatter: resetButton,
       headerStyle: {
         width: '7.5%'

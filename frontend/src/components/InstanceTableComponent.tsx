@@ -53,7 +53,11 @@ const InstanceTableComponent = (props: Props): JSX.Element => {
   const stopButton = (cell, row): JSX.Element => {
     return (
       <>
-        <Button disabled={row.status !== 'instance.status.0'} onClick={() => props.onStopButton(row.id)} variant={'danger'} size='sm' style={{ width: '100%', padding: 5 }}>Set Stopped</Button>
+        {
+          row.status === 'instance.status.0' ?
+            <Button onClick={() => props.onStopButton(row.id)} variant={'danger'} size='sm' style={{ width: '100%', padding: 5 }}>Set Stopped</Button> :
+            null
+        }
       </>
     )
   }
@@ -105,7 +109,7 @@ const InstanceTableComponent = (props: Props): JSX.Element => {
       }
     },
     {
-      dataField: 'dummydata',
+      dataField: 'status',
       isDummyField: true,
       formatter: stopButton,
       headerStyle: {
