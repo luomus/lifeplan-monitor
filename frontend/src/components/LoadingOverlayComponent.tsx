@@ -6,20 +6,16 @@ interface PropsType {
   children?: JSX.Element | JSX.Element[]
 }
 const LoadingOverlayComponent = (props: PropsType): JSX.Element => {
-  if (props.loading) {
-    return (
-      <>
-        <Spinner animation={'border'} variant={'primary'} style={{ position: 'absolute', left: '50vw', top: '50vh' }}/>
-        <div style={{ opacity: 0.5, pointerEvents: 'none' }}>
-          {props.children}
-        </div>
-      </>
-    )
-  }
-
   return (
     <>
-      {props.children}
+      {
+        props.loading ?
+          <Spinner animation={'border'} variant={'primary'} style={{ position: 'absolute', left: '50vw', top: '50vh' }}/> :
+          null
+      }
+      <div style={props.loading ? { opacity: 0.5, pointerEvents: 'none' } : null}>
+        {props.children}
+      </div>
     </>
   )
 }

@@ -29,7 +29,7 @@ const MiddlesoftwarePage = (props: Props): JSX.Element => {
           null
       }
       <div className='mb-2'>
-        <Tabs defaultActiveKey='instances'>
+        <Tabs defaultActiveKey={'instances'}>
           <Tab eventKey='instances' title='Instances'>
             <InstanceTableComponent instances={props.instances} onStopButton={props.onStopButton} onResetButton={props.onResetButton}/>
           </Tab>
