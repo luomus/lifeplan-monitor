@@ -84,7 +84,7 @@ const MiddlesoftwarePageContainer = (props: Props): JSX.Element => {
           include = false
         }
 
-        if (include) {
+        if (include && (!activity.processedBy || activity.processedBy === instance.id)) {
           newActivities.push(activity)
         }
 
