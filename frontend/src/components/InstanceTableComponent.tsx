@@ -9,7 +9,9 @@ import {
   XOctagonFill,
   QuestionCircleFill,
   ExclamationDiamondFill,
-  CheckSquareFill
+  CheckSquareFill,
+  DashSquareFill,
+  PlusSquareFill
 } from 'react-bootstrap-icons'
 import { Button } from 'react-bootstrap'
 
@@ -22,7 +24,24 @@ interface Props {
 const InstanceTableComponent = (props: Props): JSX.Element => {
   const expandRow = {
     //eslint-disable-next-line react/display-name
-    renderer: (row: InstanceType) => <ActivityTableComponent activities={row.activities} parentId={row.id} onResetButton={props.onResetButton}/>
+    renderer: (row: InstanceType) => <ActivityTableComponent activities={row.activities} parentId={row.id} onResetButton={props.onResetButton}/>,
+    showExpandColumn: true,
+    // eslint-disable-next-line react/display-name
+    expandHeaderColumnRenderer: ({ isAnyExpands }) => {
+      if (isAnyExpands) {
+        return <DashSquareFill color='gray'/>
+      }
+
+      return <PlusSquareFill color='gray'/>
+    },
+    // eslint-disable-next-line react/display-name
+    expandColumnRenderer: ({ expanded }) => {
+      if (expanded) {
+        return <DashSquareFill color='gray'/>
+      }
+
+      return <PlusSquareFill color='gray'/>
+    }
   }
 
   const dateFromNow = (cell: string): JSX.Element | string => {

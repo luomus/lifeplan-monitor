@@ -3,7 +3,8 @@ import { connect, ConnectedProps } from 'react-redux'
 import { ModalParamsType } from '../components/ConfirmationModalComponent'
 import LifeplanPageComponent from '../components/LIfeplanPageComponent'
 import LoadingOverlayComponent from '../components/LoadingOverlayComponent'
-import { RootState, fetchLifeplanData, resetActivity } from '../stores'
+import useField from '../hooks/fieldHook'
+import { RootState, fetchLifeplanData, resetActivity, ActivityType } from '../stores'
 
 const mapStateToProps = (state: RootState) => {
   const { user, lifeplan } = state
@@ -27,13 +28,43 @@ const connector = connect(
 type Props = ConnectedProps<typeof connector>
 
 const LifeplanPageContainer = (props: Props): JSX.Element => {
-  useEffect(() => {
-    props.fetchLifeplanData()
-  }, [])
+  const initPageData = () => {
+    const newActivities = props.lifeplan.data.activities.filter(activity => {
+      let include = true
+
+      if (idField.value.length >= 3 && !(activity.id.toString().includes(idField.value) || activity.uuid.includes(idField.value))) {
+        include = false
+      }
+
+      if (statusField.value !== '' && activity.status !== statusField.value) {
+        include = false
+      }
+
+      console.log(activity.id, include, idField.value, statusField.value)
+      return include
+    })
+
+    console.log(newActivities.length)
+
+    return newActivities
+  }
 
   const [ show, setShow ] = useState<boolean>(false)
   const [ body, setBody ] = useState<string>('')
   const [ resetTarget, setResetTarget ] = useState<number | null>(null)
+  const [ activities, setActivities ] = useState<ActivityType[]>([])
+  const idField = useField('text')
+  const statusField = useField('text')
+
+  useEffect(() => {
+    props.fetchLifeplanData()
+  }, [])
+
+  useEffect(() => {
+    setActivities(initPageData())
+  }, [props.lifeplan, idField.value, statusField.value])
+
+
 
   const onResetButton = (id: number) => {
     setResetTarget(id)
@@ -59,13 +90,17 @@ const LifeplanPageContainer = (props: Props): JSX.Element => {
     show: show
   }
 
+  console.log(activities)
+
   return (
     <LoadingOverlayComponent loading={props.lifeplan.loading}>
       <LifeplanPageComponent
-        activities={props.lifeplan.data?.activities}
+        activities={activities}
         stats={props.lifeplan.data?.count}
         onResetButton={onResetButton}
         resetModalParams={resetModalParams}
+        idField={idField}
+        statusField={statusField}
       />
     </LoadingOverlayComponent>
   )
