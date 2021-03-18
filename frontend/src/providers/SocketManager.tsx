@@ -43,12 +43,15 @@ type Props = ReduxProps & {
   children: JSX.Element
 }
 
+//Uses react context provide all contained children access to socket.io
 export const SocketContext: React.Context<{ socket: Socket, createSocket: () => void } | null> = React.createContext(null)
 const SocketProvider = SocketContext.Provider
 
 const SocketManager = (props: Props): JSX.Element => {
   const [ socket, setSocket ] = useState<Socket | null>(null)
 
+  //usesr is logged in but socket is not connected open connection to monitor backend, else if connection is open but user
+  //is not logged in disconnect socket, although backend will refuse connection anyway if user has logged out or session has timed out
   useEffect(() => {
     if (props.user.userData && !socket?.connected) {
       createSocket()

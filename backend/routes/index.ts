@@ -22,6 +22,7 @@ router.use(
   isAuthenticated('both'),
   activityRouter
 )
+//passport.authenticate('local') triggers authentication using local strategy defined in backends index.ts
 router.use(
   '/api/login',
   passport.authenticate('local'),

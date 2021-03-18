@@ -26,9 +26,12 @@ type Props = ReduxProps & {
   children: JSX.Element
 }
 
+
 export const TimeoutContext: React.Context<{ logoutTimer: any, createLogoutTimer: (expiresAt: Date) => void, clearLogoutTimer: () => void } | null> = React.createContext(null)
 const TimeoutProvider = TimeoutContext.Provider
 
+//Uses react context and provider allows children access to manipulate logout timer, which is triggered few seconds before session timout,
+//with login component setting it upon login, and logout canceling it on logout.
 const UserTimoutManager = (props: Props): JSX.Element => {
   const logoutTimer = useRef<null | NodeJS.Timeout>(null)
   const history = useHistory()
@@ -45,6 +48,7 @@ const UserTimoutManager = (props: Props): JSX.Element => {
     }
   }, [])
 
+  //forces logout 10s before cookie expiration, avoid situation where frontend is seemingly logged in but cookie is expired
   const createLogoutTimer = (expiresAt: Date) => {
     logoutTimer.current = setTimeout(
       () => {

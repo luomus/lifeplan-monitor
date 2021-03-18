@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 
+//handles erros thrown in routers
 const errorHandler = (error: any, req: Request, res: Response, next: NextFunction): void => {
   if (error.name === 'UnauthorizedError') {
     res.status(error.status).json({

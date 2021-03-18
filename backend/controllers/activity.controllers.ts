@@ -3,6 +3,8 @@ import { Transaction } from 'sequelize/types'
 import db from '../models'
 import socket from '../services/socket.service'
 
+
+//update activity, and selectively update updatedAt-field on instance which is processing the activity in question
 export const updateActivityById = async (req: Request, res: Response): Promise<void> => {
   const result = await db.sequelize.transaction(async (t: Transaction) => {
     const updatedActivity = await db.Activity.findOne({
@@ -43,6 +45,8 @@ export const updateActivityById = async (req: Request, res: Response): Promise<v
   res.status(200).send(result)
 }
 
+
+//cleans uo orphaned activities from the database
 export const cleanupActivities = async (): Promise<void> => {
   const activities = await db.Activity.findAll({
     include: {

@@ -6,6 +6,8 @@ import db from '../models'
 
 let connection: Socket | null = null
 
+
+//eanbles the use of express middleware as socket middleware
 const wrap = (
   middleware: (req: any, res: any, next: any) => void
 ) => (
@@ -28,6 +30,7 @@ export class Socket {
 
     this.socketIO = io
 
+    //uses same session management as api-endpoints to authenticate socket communication
     io.use(wrap(sessionInstance))
     io.use(wrap(passport.initialize()))
     io.use(wrap(passport.session()))
@@ -44,6 +47,7 @@ export class Socket {
     })
   }
 
+  //wen a client connects for the first time sends the instances to it
   sendInitial = async (socket: Socket): Promise<void> => {
     const instances = await db.Instance.findAll({
       include: [{

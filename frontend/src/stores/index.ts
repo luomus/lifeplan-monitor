@@ -84,6 +84,8 @@ const expireTransform = createExpirationTransform({
   },
 })
 
+//uses redux-persists to persist user reducer, with expiration so that if user expiration has passed on relad user is wiped,
+//shuld not happen due to UserTimeoutManager-provider
 const rootReducer = persistReducer({
   key: 'userReducer',
   storage: storage,

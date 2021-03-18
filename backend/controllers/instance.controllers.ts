@@ -228,11 +228,15 @@ export const updateInstanceById = async (req: Request, res: Response): Promise<v
 
     const toReturn = updatedInstance.toJSON()
 
+    //triggered when ms int find new activities to process, so remove the instance after 1min timer to avoid
+    //crowding monitor with instances without actual information
     if (noActivities) {
       timedInstanceDelete(req.params.id)
       return toReturn
     }
 
+    //flag to control if monitor should add new activities belonging to instance, contiunuing should happen when middlesoftware
+    //is sending activities extracted from Lifeplan backend
     if (!addActivities) {
       return toReturn
     }
@@ -273,6 +277,8 @@ export const updateInstanceById = async (req: Request, res: Response): Promise<v
   res.status(200).send(result)
 }
 
+
+//1 min timed deletion of instance, expected to not have activities, hence they are not touched
 const timedInstanceDelete = (id: string) => {
   setTimeout(async () => {
     const instance = await db.Instance.findOne({
@@ -286,6 +292,8 @@ const timedInstanceDelete = (id: string) => {
   }, 60 * 1000)
 }
 
+
+//destroys instance, and activities that are marked by processedBy as belonging to to it
 export const deleteInstanceById = async (req: Request, res: Response): Promise<void> => {
   const result = await db.sequelize.transaction(async (t: Transaction)  => {
     const instance = await db.Instance.findOne({

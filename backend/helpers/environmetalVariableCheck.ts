@@ -13,6 +13,8 @@ const expectedKeys = [
   'MONITOR_INPROGRESS_MAX_AGE',
 ]
 
+
+//checks that all variables are present, should not trip if openshift yaml:s have correct env:s
 const environmentalVariableCheck = () => {
   const keys = Object.keys(process.env)
   let notFound = false

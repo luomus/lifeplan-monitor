@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction } from 'express'
 import passport from 'passport'
 
+
+//Midlleware for routers to autheticate requests for both login sessions and jwt:s, either for only one method
+//or both, depending on the route
 const  isAuthenticated = (type: string) => (req: Request, res: Response, next: NextFunction): void => {
   if (type === 'session' && req.isAuthenticated()) {
     return next()

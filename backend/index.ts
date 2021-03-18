@@ -22,6 +22,7 @@ environmentalVariableCheck()
 
 db.sequelize.sync()
 
+//initlaizes the strategy for passport local authentication for login
 passport.use(new LocalStrategy({
   session: false
 },
@@ -51,6 +52,7 @@ async (username, password, next) => {
 }
 ))
 
+//passport authentication strategy for jwt-authenticated results
 passport.use(new JwtStrategy(
   {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -136,6 +138,8 @@ server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
 
+
+//once per day run cleanup tp remove orphaned activities, and instances and activities processed by each if they've gotten too old
 setInterval(() => {
   try {
     cleanupInstances()

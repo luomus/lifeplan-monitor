@@ -40,6 +40,7 @@ const LoginFormContainer = (props: Props): JSX.Element => {
       credentials.password.value,
       socketContext.createSocket,
       () => history.push('/'),
+      //initializes LogoutTimer so the user is automatically logged out when session is about to time out
       timeoutContext.createLogoutTimer
     )
     credentials.password.reset()

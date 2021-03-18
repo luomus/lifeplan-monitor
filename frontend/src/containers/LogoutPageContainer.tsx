@@ -36,6 +36,7 @@ const LogoutPageContainer = (props: Props): JSX.Element => {
     props.userLogout(
       socketContext.socket,
       () => history.push('/login'),
+      //clears the logout-timout as it becomes unnecessary upon logout
       timeoutContext.clearLogoutTimer
     )
   }, [])
