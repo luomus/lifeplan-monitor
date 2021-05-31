@@ -1,6 +1,6 @@
 This is the monitoring app for project lifeplans file transfer milddlesoftware.
 
-###Running locally
+### Running locally
 
 As an prerequisite you should have an MySQL database running, and have generated an api-token for the lifelan backend. These, and other values diescribed in the file,  should be added to .env-file you can create by copying and renaming .env.example-file. 
 
