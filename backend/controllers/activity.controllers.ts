@@ -3,6 +3,9 @@ import { Transaction } from 'sequelize/types'
 import db from '../models'
 import socket from '../services/socket.service'
 
+const setLastUpdate = (req: Request, date: Date) => {
+  req.app.locals.updatedAt = date
+}
 
 //update activity, and selectively update updatedAt-field on instance which is processing the activity in question
 export const updateActivityById = async (req: Request, res: Response): Promise<void> => {
@@ -40,6 +43,8 @@ export const updateActivityById = async (req: Request, res: Response): Promise<v
 
     return updatedActivity.toJSON()
   })
+
+  setLastUpdate(req, result.updatedAt)
 
   socket.connection()?.emit('update_instance_activity', result)
   res.status(200).send(result)

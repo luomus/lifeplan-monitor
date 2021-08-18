@@ -3,6 +3,14 @@ import { Request, Response } from 'express'
 import moment from 'moment'
 
 export const getMiddlesoftwareStatus = async (req: Request, res: Response) => {
+  //Check if last update was received more than a day ago from the internal updatedAt variable
+  if (req.app.locals.updatedAt && moment(req.app.locals.updatedAt).isBefore(moment().subtract(1, 'days'))) {
+    return res.status(500).json({
+      error: 'Middlesoftware problem, last update received more than a day ago.'
+    })
+  }
+
+  //Check if last instance reported failure to fetch activities, signalling problems with lifeplan
   let lastInstance = await db.Instance.findAll({
     limit: 1,
     order: [[ 'updatedAt', 'DESC' ]]
@@ -20,12 +28,7 @@ export const getMiddlesoftwareStatus = async (req: Request, res: Response) => {
     })
   }
 
-  if (moment(lastInstance.updatedAt).isBefore(moment().subtract(1, 'days'))) {
-    return res.status(500).json({
-      error: 'Middlesoftware problem, last update received more than a day ago.'
-    })
-  }
-
+  //check running middlesoftware instances if any have been running without reprting updates for longer than a day
   const runningInstances = await db.Instance.findAll({
     where: {
       status: 'instance.status.0'
@@ -34,7 +37,7 @@ export const getMiddlesoftwareStatus = async (req: Request, res: Response) => {
 
   let count = 0
 
-  runningInstances.array.forEach(instance => {
+  runningInstances.forEach(instance => {
     if (moment(instance.updatedAt).isBefore(moment().subtract(1, 'days'))) {
       count++
     }
@@ -46,6 +49,7 @@ export const getMiddlesoftwareStatus = async (req: Request, res: Response) => {
     })
   }
 
+  //check last activity for problems creating buckets, possibly meaning failures of allas keys
   let lastActivity = await db.Activity.findAll({
     limit: 1,
     order: [[ 'updatedAt', 'DESC' ]]

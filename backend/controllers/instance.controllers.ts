@@ -4,6 +4,9 @@ import { Op, Transaction } from 'sequelize'
 import socket from '../services/socket.service'
 import { resetActivity } from '../services/lifeplan.service'
 
+const setLastUpdate = (req: Request, date: Date) => {
+  req.app.locals.updatedAt = date
+}
 
 //For cleaning up instances that have gotten older than each types max ages, also remove activities that have been processed by them
 export const cleanupInstances = async (): Promise<void> => {
@@ -206,6 +209,8 @@ export const addInstance = async (req: Request, res: Response): Promise<void> =>
     return toReturn
   })
 
+  setLastUpdate(req, result.updatedAt)
+
   socket.connection()?.emit('add_instance', result)
   res.status(201).send(result)
 }
@@ -272,6 +277,8 @@ export const updateInstanceById = async (req: Request, res: Response): Promise<v
 
     return toReturn
   })
+
+  setLastUpdate(req, result.updatedAt)
 
   socket.connection()?.emit('update_instance', result)
   res.status(200).send(result)

@@ -138,7 +138,6 @@ server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
 
-
 //once per day run cleanup tp remove orphaned activities, and instances and activities processed by each if they've gotten too old
 setInterval(() => {
   try {
