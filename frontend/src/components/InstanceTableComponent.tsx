@@ -1,7 +1,6 @@
+/* eslint-disable react/display-name */
 import Moment from 'react-moment'
 import React from 'react'
-import BootstrapTable from 'react-bootstrap-table-next'
-import PaginationFactory from 'react-bootstrap-table2-paginator'
 import { InstanceType } from '../stores'
 import ActivityTableComponent from './ActivityTableComponent'
 import {
@@ -10,10 +9,9 @@ import {
   QuestionCircleFill,
   ExclamationDiamondFill,
   CheckSquareFill,
-  DashSquareFill,
-  PlusSquareFill
 } from 'react-bootstrap-icons'
 import { Button } from 'react-bootstrap'
+import TableComponent from './TableComponent'
 
 interface Props {
   instances: InstanceType[],
@@ -22,40 +20,26 @@ interface Props {
 }
 
 const InstanceTableComponent = (props: Props): JSX.Element => {
-  const expandRow = {
-    //eslint-disable-next-line react/display-name
-    renderer: (row: InstanceType) => <ActivityTableComponent activities={row.activities} parentId={row.id} onResetButton={props.onResetButton}/>,
-    showExpandColumn: true,
-    // eslint-disable-next-line react/display-name
-    expandHeaderColumnRenderer: ({ isAnyExpands }) => {
-      if (isAnyExpands) {
-        return <DashSquareFill color='gray'/>
-      }
-
-      return <PlusSquareFill color='gray'/>
-    },
-    // eslint-disable-next-line react/display-name
-    expandColumnRenderer: ({ expanded }) => {
-      if (expanded) {
-        return <DashSquareFill color='gray'/>
-      }
-
-      return <PlusSquareFill color='gray'/>
-    }
+  const detailPanel = (rowData: InstanceType): JSX.Element => {
+    return <ActivityTableComponent
+      activities={rowData.activities}
+      parentId={rowData.id}
+      onResetButton={props.onResetButton}
+    />
   }
 
-  const dateFromNow = (cell: string): JSX.Element | string => {
-    if (cell) {
-      return <Moment fromNow>{cell}</Moment>
+  const dateFromNow = (rowData: InstanceType): JSX.Element | string => {
+    if (rowData.updatedAt) {
+      return <Moment fromNow>{rowData.updatedAt}</Moment>
     }
 
     return 'N/A'
   }
 
-  const statusFormatter = (cell: string) => {
+  const statusFormatter = (rowData: InstanceType) => {
     const size = 25
 
-    switch (cell) {
+    switch (rowData.status) {
       case 'instance.status.0':
         return <ArrowDownUp size={size} color='green'/>
       case 'instance.status.1':
@@ -69,12 +53,12 @@ const InstanceTableComponent = (props: Props): JSX.Element => {
     }
   }
 
-  const stopButton = (cell, row): JSX.Element => {
+  const stopButton = (rowData: InstanceType): JSX.Element => {
     return (
       <>
         {
-          row.status === 'instance.status.0' ?
-            <Button onClick={() => props.onStopButton(row.id)} variant={'danger'} size='sm' style={{ width: '100%', padding: 5 }}>Set Stopped</Button> :
+          rowData.status === 'instance.status.0' ?
+            <Button onClick={() => props.onStopButton(rowData.id)} variant={'danger'} size='sm' style={{ width: '100%', padding: 5 }}>Set Stopped</Button> :
             null
         }
       </>
@@ -83,74 +67,47 @@ const InstanceTableComponent = (props: Props): JSX.Element => {
 
   const columns = [
     {
-      dataField: 'status',
-      text: 'Status',
-      sort: true,
-      formatter: statusFormatter,
-      headerStyle: {
-        width: '10%'
-      },
-      style: {
-        fontSize: '15px',
-      }
+      field: 'status',
+      title: 'Status',
+      render: statusFormatter,
+      width: '5%'
     },
     {
-      dataField: 'id',
-      text: 'ID',
-      sort: true,
-      headerStyle: {
-        width: '30%'
-      },
-      style: {
-        fontSize: '15px',
-      }
+      field: 'id',
+      title: 'ID',
+      sorting: false,
+      width: '35%'
     },
     {
-      dataField: 'notes',
-      text: 'Notes',
-      headerStyle: {
-        width: '35%'
-      },
-      style: {
-        fontSize: '15px',
-      }
+      field: 'notes',
+      title: 'Notes',
+      sorting: false,
+      width: '30%'
     },
     {
-      dataField: 'updatedAt',
-      text: 'Updated',
-      sort: true,
-      formatter: dateFromNow,
-      headerStyle: {
-        width: '15%',
-      },
-      style: {
-        fontSize: '15px',
-      }
+      field: 'updatedAt',
+      title: 'Updated',
+      render: dateFromNow,
+      width: '15%'
     },
     {
       dataField: 'status',
-      isDummyField: true,
-      formatter: stopButton,
-      headerStyle: {
-        width: '10%'
-      }
+      render: stopButton,
+      width: '15%'
     },
   ]
 
-  const pagination = PaginationFactory({
-    showTotal: true
-  })
-
   return (
-    <BootstrapTable
-      bootstrap4
-      striped
-      condensed
-      keyField='id'
-      data={props.instances}
+    <TableComponent
       columns={columns}
-      expandRow={expandRow}
-      pagination={pagination}
+      data={props.instances}
+      rowStyle={{
+        fontSize: 15
+      }}
+      detailPanel={detailPanel}
+      pageSize={10}
+      pageSizeOptions={[10, 20, 50, 100]}
+
     />
   )
 }

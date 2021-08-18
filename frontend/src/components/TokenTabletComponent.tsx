@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button } from 'react-bootstrap'
-import BootstrapTable from 'react-bootstrap-table-next'
 import { TokenType } from '../stores/apiToken/types'
+import TableComponent from './TableComponent'
 
 interface Props {
   tokens: TokenType[],
@@ -10,40 +10,32 @@ interface Props {
 
 const TokenTableComponent = (props: Props): JSX.Element => {
 
-  const deletionButton = (cell, row) => {
+  const deletionButton = (rowData: TokenType) => {
     return (
-      <Button onClick={() => props.deleletionHandler(row.id)}>DELETE</Button>
+      <Button onClick={() => props.deleletionHandler(rowData.id)} variant={'danger'}>DELETE</Button>
     )
   }
 
   const columns = [
     {
-      dataField: 'tokenname',
-      text: 'Token Name',
-      sort: true,
-      headerStyle: {
-        width: '85%'
-      }
+      field: 'tokenname',
+      title: 'Token Name',
+      width: '85%'
     },
     {
-      dataField: 'dummydata',
-      isDummyField: true,
-      formatter: deletionButton,
-      headerStyle: {
-        width: '15%'
-      }
+      dataField: 'id',
+      sorting: false,
+      render: deletionButton,
+      width: '15%'
     },
   ]
 
   return (
     <div className='mb-2'>
-      <BootstrapTable
-        bootstrap4
-        striped
-        condensed
-        keyField='id'
-        data={props.tokens}
+      <TableComponent
         columns={columns}
+        data={props.tokens}
+        rowStyle={undefined}
       />
     </div>
   )

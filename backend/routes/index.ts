@@ -6,6 +6,7 @@ import {
   logoutRouter
 } from './auth.routes'
 import tokenRouter from './token.routes'
+import healthRouter from './health.routes'
 import lifeplanRouter from './lifeplan.routes'
 import passport from 'passport'
 import isAuthenticated from '../helpers/authenticationMiddleware'
@@ -43,6 +44,12 @@ router.use(
   '/api/lifeplan',
   isAuthenticated('session'),
   lifeplanRouter
+)
+
+router.use(
+  '/api/health',
+  isAuthenticated('both'),
+  healthRouter
 )
 
 export default router

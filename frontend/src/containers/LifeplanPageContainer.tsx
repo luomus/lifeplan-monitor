@@ -40,11 +40,8 @@ const LifeplanPageContainer = (props: Props): JSX.Element => {
         include = false
       }
 
-      console.log(activity.id, include, idField.value, statusField.value)
       return include
     })
-
-    console.log(newActivities.length)
 
     return newActivities
   }
@@ -89,8 +86,6 @@ const LifeplanPageContainer = (props: Props): JSX.Element => {
     body: body,
     show: show
   }
-
-  console.log(activities)
 
   return (
     <LoadingOverlayComponent loading={props.lifeplan.loading}>

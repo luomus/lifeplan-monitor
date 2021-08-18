@@ -1,7 +1,5 @@
 import Moment from 'react-moment'
 import React from 'react'
-import BootstrapTable from 'react-bootstrap-table-next'
-import PaginationFactory from 'react-bootstrap-table2-paginator'
 import { ActivityType } from '../stores/middlesoftware/types'
 import {
   Hourglass,
@@ -13,6 +11,7 @@ import {
 } from 'react-bootstrap-icons'
 import { Button } from 'react-bootstrap'
 import moment from 'moment'
+import TableComponent from './TableComponent'
 
 interface Props {
   parentId?: string,
@@ -21,52 +20,54 @@ interface Props {
 }
 
 const ActivityTableComponent = (props: Props): JSX.Element => {
-  const dateFromNow = (cell: string | null): JSX.Element | string => {
-    if (cell) {
-      return <Moment fromNow>{cell}</Moment>
+  const dateFromNow = (rowData: ActivityType): JSX.Element | string => {
+    if (rowData.updatedAt) {
+      return <Moment fromNow>{rowData.updatedAt}</Moment>
     }
 
     return 'N/A'
   }
 
-  const progressFormatter = (cell, row): string => {
-    if (cell && row.totalSize > 0) {
-      return `${(cell / row.totalSize * 100).toFixed(1)}%`
+  const progressFormatter = (rowData: ActivityType): string => {
+    if (rowData.currentSize && rowData.totalSize > 0) {
+      return `${(rowData.currentSize / rowData.totalSize * 100).toFixed(1)}%`
     }
 
     return 'N/A'
   }
 
-  const sizeFormatter = (cell: number | null): string => {
-    if (cell) {
-      if (cell / 10 ** 12 >= 1.0) {
-        return `${(cell / 10 ** 12).toFixed(1)}TB`
-      } else if (cell / 10 ** 9 >= 1.0) {
-        return `${(cell / 10 ** 9).toFixed(1)}GB`
-      } else if (cell / 10 ** 6 >= 1.0) {
-        return `${(cell / 10 ** 6).toFixed(1)}MB`
-      }  else if (cell / 10 ** 3 >= 1.0) {
-        return `${(cell / 10 ** 3).toFixed(1)}kB`
+  const sizeFormatter = (rowData: ActivityType): string => {
+    const size = rowData.totalSize
+
+    if (size) {
+      if (size / 10 ** 12 >= 1.0) {
+        return `${(size / 10 ** 12).toFixed(1)}TB`
+      } else if (size / 10 ** 9 >= 1.0) {
+        return `${(size / 10 ** 9).toFixed(1)}GB`
+      } else if (size / 10 ** 6 >= 1.0) {
+        return `${(size / 10 ** 6).toFixed(1)}MB`
+      }  else if (size / 10 ** 3 >= 1.0) {
+        return `${(size / 10 ** 3).toFixed(1)}kB`
       } else {
-        return `${cell}B`
+        return `${size}B`
       }
     }
 
     return 'N/A'
   }
 
-  const durationFormatter = (cell: number | null): string => {
-    if (cell) {
-      return Math.floor(moment.duration(cell).asHours()) + moment.utc(cell).format(':mm:ss')
+  const durationFormatter = (rowData: ActivityType): string => {
+    if (rowData.duration) {
+      return Math.floor(moment.duration(rowData.duration).asHours()) + moment.utc(rowData.duration).format(':mm:ss')
     }
 
     return 'N/A'
   }
 
-  const statusFormatter = (cell: string): JSX.Element => {
+  const statusFormatter = (rowData: ActivityType): JSX.Element => {
     const size = 25
 
-    switch (cell) {
+    switch (rowData.status) {
       case 'activity.status.0':
         return <Hourglass size={size} color='gray'/>
       case 'activity.status.1':
@@ -84,12 +85,12 @@ const ActivityTableComponent = (props: Props): JSX.Element => {
     }
   }
 
-  const resetButton = (cell, row): JSX.Element => {
+  const resetButton = (rowData: ActivityType): JSX.Element => {
     return (
       <>
         {
-          row.status !== 'activity.status.0' ?
-            <Button disabled={props.parentId && props.parentId !== cell} onClick={() => props.onResetButton(row.id)} variant={'danger'} size='sm' style={{ width: '100%', padding: 5 }}>Reset</Button> :
+          rowData.status !== 'activity.status.0' ?
+            <Button disabled={props.parentId && props.parentId !== rowData.processedBy} onClick={() => props.onResetButton(rowData.id)} variant={'danger'} size='sm' style={{ width: '100%', padding: 5 }}>Reset</Button> :
             null
         }
       </>
@@ -98,120 +99,79 @@ const ActivityTableComponent = (props: Props): JSX.Element => {
 
   const columns = [
     {
-      dataField: 'status',
-      text: 'State',
-      sort: true,
-      formatter: statusFormatter,
-      headerStyle: {
-        width: '6%'
-      }
+      field: 'status',
+      title: 'State',
+      render: statusFormatter,
+      width: '6%'
     },
     {
-      dataField: 'currentSize',
-      text: 'Prog.',
-      formatter: progressFormatter,
-      headerStyle: {
-        width: '6.5%'
-      },
-      style: {
-        fontSize: '15px',
-      }
+      field: 'currentSize',
+      title: 'Prog.',
+      sorting: false,
+      render: progressFormatter,
+      width: '6.5%'
     },
     {
-      dataField: 'id',
-      text: 'ID',
-      sort: true,
-      headerStyle: {
-        width: '5%'
-      },
-      style: {
-        fontSize: '15px',
-      }
+      field: 'id',
+      title: 'ID',
+      width: '5%'
     },
     {
-      dataField: 'uuid',
-      text: 'UUID',
-      sort: true,
-      headerStyle: {
-        width: '30%'
-      },
-      style: {
-        fontSize: '15px',
-      }
+      field: 'uuid',
+      title: 'UUID',
+      sorting: false,
+      width: '30%'
     },
     {
-      dataField: 'notes',
-      text: 'Notes',
-      headerStyle: {
-        width: '25%'
-      },
-      style: {
-        fontSize: '15px',
-      }
+      field: 'notes',
+      title: 'Notes',
+      sorting: false,
+      width: '25%'
     },
     {
-      dataField: 'updatedAt',
-      text: 'Updated',
-      sort: true,
-      formatter: dateFromNow,
-      headerStyle: {
-        width: '15%',
-      },
-      style: {
-        fontSize: '15px',
-      }
+      field: 'updatedAt',
+      title: 'Updated',
+      render: dateFromNow,
+      width: '15%',
     },
     {
-      dataField: 'totalSize',
-      text: 'Size',
-      formatter: sizeFormatter,
-      headerStyle: {
-        width: '7.5%'
-      },
-      style: {
-        fontSize: '15px',
-      }
+      field: 'totalSize',
+      title: 'Size',
+      sorting: false,
+      render: sizeFormatter,
+      width: '7.5%'
     },
     {
-      dataField: 'duration',
-      text: 'Duration',
-      formatter: durationFormatter,
-      headerStyle: {
-        width: '7.5%'
-      },
-      style: {
-        fontSize: '15px',
-      }
+      field: 'duration',
+      title: 'Duration',
+      sorting: false,
+      render: durationFormatter,
+      width: '7.5%'
     },
     {
-      dataField: 'processedBy',
-      formatter: resetButton,
-      headerStyle: {
-        width: '7.5%'
-      }
+      field: 'processedBy',
+      sorting: false,
+      render: resetButton,
+      width: '7.5%'
     },
   ]
 
-  const rowStyle = (row: ActivityType): any => {
-    if (row.status !== 'activity.status.0' && props.parentId && row.processedBy !== props.parentId) {
-      return { opacity: 0.25 }
+  const rowStyle = (rowData: ActivityType): any => {
+    if (rowData.status !== 'activity.status.0' && props.parentId && rowData.processedBy !== props.parentId) {
+      return {
+        fontSize: '15px',
+        opacity: 0.25
+      }
+    } else {
+      return { fontSize: '15px' }
     }
   }
 
-  const pagination = PaginationFactory({
-    showTotal: true
-  })
-
   return (
-    <BootstrapTable
-      bootstrap4
-      striped
-      condensed
-      keyField='id'
-      data={props.activities}
+    <TableComponent
       columns={columns}
+      data={props.activities}
       rowStyle={rowStyle}
-      pagination={pagination}
     />
   )
 }

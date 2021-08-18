@@ -26,7 +26,7 @@ Frontend:
 
 ### Openshift deployment, using Luomus dockerhub
 
-1. Build image for with `docker build -t luomus/lifeplan-monitor:latest`
+1. Build image for with `docker build . -t luomus/lifeplan-monitor:latest`
 2. Log in to docker
 3. Push the image to dockerhub with `docker push luomus/lifeplan-monitor:latest`
 4. Begin by creating a MySQL from the catalog
