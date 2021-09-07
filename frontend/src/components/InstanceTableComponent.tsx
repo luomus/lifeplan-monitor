@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 import Moment from 'react-moment'
 import React from 'react'
-import { InstanceType } from '../stores'
+import { InstanceType, setInstances } from '../stores'
 import ActivityTableComponent from './ActivityTableComponent'
 import {
   ArrowDownUp,
@@ -20,7 +20,7 @@ interface Props {
 }
 
 const InstanceTableComponent = (props: Props): JSX.Element => {
-  const detailPanel = (rowData: InstanceType): JSX.Element => {
+  const detailPanel = ({ rowData }: { rowData: InstanceType }): JSX.Element => {
     return <ActivityTableComponent
       activities={rowData.activities}
       parentId={rowData.id}
@@ -64,6 +64,8 @@ const InstanceTableComponent = (props: Props): JSX.Element => {
       </>
     )
   }
+
+  console.log(props.instances)
 
   const columns = [
     {

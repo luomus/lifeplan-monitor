@@ -1,6 +1,7 @@
 import db from '../models'
 import { Request, Response } from 'express'
 import moment from 'moment'
+import { Op } from 'sequelize'
 
 export const getMiddlesoftwareStatus = async (req: Request, res: Response) => {
   //Check if last update was received more than a day ago from the internal updatedAt variable
@@ -10,9 +11,21 @@ export const getMiddlesoftwareStatus = async (req: Request, res: Response) => {
     })
   }
 
-  //Check if last instance reported failure to fetch activities, signalling problems with lifeplan
+  //Check if last instance, which is not currently querying activities, reported failure to fetch activities, signalling problems with lifeplan
   let lastInstance = await db.Instance.findAll({
     limit: 1,
+    where: {
+      [Op.not]: {
+        [Op.and]: [
+          { status: 'instance.status.0' },
+          { createdAt: {
+            [Op.eq]: {
+              [Op.col]: 'updatedAt'
+            }
+          } }
+        ]
+      }
+    },
     order: [[ 'updatedAt', 'DESC' ]]
   })
 
