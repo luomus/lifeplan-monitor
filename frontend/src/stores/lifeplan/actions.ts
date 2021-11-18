@@ -1,6 +1,7 @@
 import { ThunkAction } from 'redux-thunk'
+import { Socket } from 'socket.io-client'
 import { ActivityType } from '..'
-import { getLifeplanData, resetLifeplanActivity } from '../../services/lifeplan'
+import { resetLifeplanActivity } from '../../services/lifeplan'
 import {
   CLEAR_ERROR,
   CLEAR_DATA,
@@ -12,15 +13,20 @@ import {
   LifeplanDataType
 } from './types'
 
-export const fetchLifeplanData  = (): ThunkAction<void, any, null, lifeplanActionTypes> => {
+export const fetchLifeplanData  = (socket: Socket): ThunkAction<void, any, null, lifeplanActionTypes> => {
   return async dispatch => {
     dispatch(setLifeplanLoading())
     try {
-      const data: LifeplanDataType = await getLifeplanData()
-      dispatch(setData(data))
+      socket.emit('get_lifeplan', (response) => {
+        if (response.error) {
+          dispatch(setLifeplanError(`500: ${response.error}`))
+        } else {
+          dispatch(setData(response))
+        }
+        dispatch(clearLifeplanLoading())
+      })
     } catch (err) {
-      dispatch(setLifeplanError(`${err.response.status}: ${err.response.data.error}`))
-    } finally {
+      dispatch(setLifeplanError(`${err}`))
       dispatch(clearLifeplanLoading())
     }
   }

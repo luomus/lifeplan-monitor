@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { connect, ConnectedProps } from 'react-redux'
 import { ModalParamsType } from '../components/ConfirmationModalComponent'
 import LifeplanPageComponent from '../components/LIfeplanPageComponent'
 import LoadingOverlayComponent from '../components/LoadingOverlayComponent'
 import useField from '../hooks/fieldHook'
+import { SocketContext } from '../providers/SocketManager'
 import { RootState, fetchLifeplanData, resetActivity, ActivityType } from '../stores'
 
 const mapStateToProps = (state: RootState) => {
@@ -28,6 +29,8 @@ const connector = connect(
 type Props = ConnectedProps<typeof connector>
 
 const LifeplanPageContainer = (props: Props): JSX.Element => {
+  const socketContext = useContext(SocketContext)
+
   const initPageData = () => {
     const newActivities = props.lifeplan.data.activities.filter(activity => {
       let include = true
@@ -54,7 +57,7 @@ const LifeplanPageContainer = (props: Props): JSX.Element => {
   const statusField = useField('text')
 
   useEffect(() => {
-    props.fetchLifeplanData()
+    props.fetchLifeplanData(socketContext.socket)
   }, [])
 
   useEffect(() => {

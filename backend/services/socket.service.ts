@@ -2,6 +2,7 @@ import { Server } from 'http'
 import passport from 'passport'
 import { Server as IoServer, Socket as IoSocket } from 'socket.io'
 import { ExtendedError } from 'socket.io/dist/namespace'
+import { getLifeplanData } from '../controllers/lifeplan.controllers'
 import db from '../models'
 
 let connection: Socket | null = null
@@ -44,6 +45,17 @@ export class Socket {
     })
     io.on('connection', socket => {
       this.sendInitial(socket)
+
+      socket.on('get_lifeplan', async (callback) => {
+        try {
+          const data = await getLifeplanData()
+          callback(data)
+        } catch (err) {
+          callback({
+            error: err.message
+          })
+        }
+      })
     })
   }
 

@@ -3,7 +3,7 @@ import { getActivities, getTotalCount, resetActivity } from '../services/lifepla
 import db from '../models'
 import socket from '../services/socket.service'
 
-export const getLifeplanData = async (req: Request, res: Response): Promise<void> => {
+export const getLifeplanData = async (): Promise<Record<string, any>> => {
   const getPrunedList = async (status: string): Promise<any[]> => {
     const activities = await getActivities(status)
 
@@ -40,39 +40,26 @@ export const getLifeplanData = async (req: Request, res: Response): Promise<void
     failedActivities = await getPrunedList('failed')
     count['activity.lifeplan.status.3'] = failedActivities.length
   } catch (err) {
-    res.status(500).json({
-      error: `Request to Lifeplan backend for failed activities failed with status ${err.response.status}`
-    })
-    return
+    throw new Error(`Request to Lifeplan backend for failed activities failed with status ${err.response.status}`)
   }
 
   try {
     inProgresActivities = await getPrunedList('in-progress')
     count['activity.lifeplan.status.1'] = inProgresActivities.length
   } catch (err) {
-    res.status(500).json({
-      error: `Request to Lifeplan backend for in-progress activities failed with status ${err.response.status}`
-    })
-    return
-
+    throw new Error(`Request to Lifeplan backend for in-progress activities failed with status ${err.response.status}`)
   }
 
   try {
     count['activity.lifeplan.status.0'] = await getTotalCount('unprocessed')
   } catch (err) {
-    res.status(500).json({
-      error: `Request to Lifeplan backend for unprocessed activities failed with status ${err.response.status}`
-    })
-    return
+    throw new Error(`Request to Lifeplan backend for unprocessed activities failed with status ${err.response.status}`)
   }
 
   try {
     count['activity.lifeplan.status.2'] = await getTotalCount('completed')
   } catch (err) {
-    res.status(500).json({
-      error: `Request to Lifeplan backend for completed activities failed with status ${err.response.status}`
-    })
-    return
+    throw new Error(`Request to Lifeplan backend for completed activities failed with status ${err.response.status}`)
   }
 
   const toReturn = {
@@ -80,7 +67,7 @@ export const getLifeplanData = async (req: Request, res: Response): Promise<void
     activities: failedActivities.concat(inProgresActivities)
   }
 
-  res.status(200).send(toReturn)
+  return toReturn
 }
 
 export const resetLifeplanActivity = async (req: Request, res: Response) => {
