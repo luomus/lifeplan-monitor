@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { Transaction } from 'sequelize/types'
+import { Op, Transaction } from 'sequelize'
 import db from '../models'
 import socket from '../services/socket.service'
 
@@ -68,4 +68,44 @@ export const cleanupActivities = async (): Promise<void> => {
       await activity.destroy()
     }
   }))
+}
+
+//get all failed activities
+export const getFailedActivities = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const date = req.query.dateFrom?.toString()
+
+    let activities = []
+
+    if (date) {
+      activities = await db.Activity.findAll({
+        where: {
+          [Op.and]: {
+            status: {
+              [Op.eq]: 'activity.status.4'
+            },
+            updatedAt: {
+              [Op.gt]: new Date(date)
+            }
+          }
+        },
+        attributes: ['id', 'notes']
+      })
+    } else {
+      activities = await db.Activity.findAll({
+        where: {
+          status: {
+            [Op.eq]: 'activity.status.4'
+          }
+        },
+        attributes: ['id', 'notes']
+      })
+    }
+
+    res.status(200).send(activities.map((activity: any) => activity.toJSON()))
+  } catch (err) {
+    res.status(500).json({
+      error: err.message
+    })
+  }
 }
