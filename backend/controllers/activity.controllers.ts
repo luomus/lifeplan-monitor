@@ -70,7 +70,7 @@ export const cleanupActivities = async (): Promise<void> => {
   }))
 }
 
-//get all failed activities
+//get all failed activities or activities which failed to delete data from nextcloud
 export const getFailedActivities = async (req: Request, res: Response): Promise<void> => {
   try {
     const date = req.query.dateFrom?.toString()
@@ -81,8 +81,18 @@ export const getFailedActivities = async (req: Request, res: Response): Promise<
       activities = await db.Activity.findAll({
         where: {
           [Op.and]: {
-            status: {
-              [Op.eq]: 'activity.status.4'
+            [Op.or]: {
+              status: {
+                [Op.eq]: 'activity.status.4'
+              },
+              [Op.and]: {
+                status: {
+                  [Op.eq]: 'activity.status.3'
+                },
+                notes: {
+                  [Op.eq]: 'Error deleting files.'
+                }
+              }
             },
             updatedAt: {
               [Op.gt]: new Date(date)
@@ -94,8 +104,20 @@ export const getFailedActivities = async (req: Request, res: Response): Promise<
     } else {
       activities = await db.Activity.findAll({
         where: {
-          status: {
-            [Op.eq]: 'activity.status.4'
+          [Op.and]: {
+            [Op.or]: {
+              status: {
+                [Op.eq]: 'activity.status.4'
+              },
+              [Op.and]: {
+                status: {
+                  [Op.eq]: 'activity.status.3'
+                },
+                notes: {
+                  [Op.eq]: 'Error deleting files.'
+                }
+              }
+            },
           }
         },
         attributes: ['id', 'notes']
