@@ -120,7 +120,7 @@ export const getFailedActivities = async (req: Request, res: Response): Promise<
             },
           }
         },
-        attributes: ['id', 'notes']
+        attributes: ['id', 'notes', 'createdAt', 'updatedAt']
       })
     }
 
