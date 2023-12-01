@@ -2,6 +2,8 @@ FROM node:15-alpine
 
 WORKDIR /srv/app/lifeplan-monitor
 
+ENV npm_config_cache = /srv/app/npm/cache
+
 WORKDIR /srv/app/lifeplan-monitor/frontend
 COPY ./frontend/package*.json ./
 RUN npm install --silent --only=prod
